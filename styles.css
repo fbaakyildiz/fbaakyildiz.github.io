@@ -421,36 +421,6 @@ h2 {
   color: var(--ink);
 }
 
-.system-section {
-  display: grid;
-  grid-template-columns: minmax(240px, 0.55fr) minmax(320px, 1fr);
-  gap: 24px;
-  border-top: 1px solid var(--line);
-  padding: 52px 0 70px;
-}
-
-.system-grid {
-  display: grid;
-  gap: 12px;
-}
-
-.system-grid article {
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: #ffffff;
-  padding: 18px;
-}
-
-.system-grid strong {
-  display: block;
-  margin-bottom: 8px;
-}
-
-.system-grid p {
-  color: var(--muted);
-  margin-bottom: 0;
-}
-
 .footer {
   display: flex;
   width: min(1180px, calc(100% - 32px));
@@ -465,8 +435,7 @@ h2 {
 
 @media (max-width: 900px) {
   .hero,
-  .toolbar,
-  .system-section {
+  .toolbar {
     grid-template-columns: 1fr;
   }
 
