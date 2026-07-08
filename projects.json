@@ -66,5 +66,24 @@
         "url": "https://github.com/fbaakyildiz/Istanbul-Electric-Bus-Optimization"
       }
     ]
+  },
+  {
+    "title": "Germany EV Diffusion System Dynamics",
+    "year": "2025",
+    "category": "System Dynamics",
+    "summary": "A system dynamics model exploring electric vehicle diffusion in Germany through charging infrastructure, consumer utility, technology learning, and policy scenarios.",
+    "tags": ["EV Adoption", "System Dynamics", "Policy Simulation", "Decarbonization"],
+    "stack": ["Vensim", "System Dynamics", "Simulation", "GitHub Pages"],
+    "accent": ["#0F766E", "#1D4ED8"],
+    "links": [
+      {
+        "label": "Project Page",
+        "url": "https://fbaakyildiz.github.io/Germany-EV-Diffusion-System-Dynamics/"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/fbaakyildiz/Germany-EV-Diffusion-System-Dynamics"
+      }
+    ]
   }
 ]
