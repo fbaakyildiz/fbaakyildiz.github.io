@@ -62,6 +62,25 @@
     ]
   },
   {
+    "title": "DataForPeople",
+    "year": "2026",
+    "category": "Generative AI",
+    "summary": "A local FastAPI app that turns public article URLs into visual story concepts, generated images, and review decisions.",
+    "tags": ["Visual Storytelling", "Data Journalism", "Generative AI", "Human Review"],
+    "stack": ["FastAPI", "Gemini", "Hugging Face", "Vanilla JS"],
+    "accent": ["#6D5DF6", "#0F766E"],
+    "links": [
+      {
+        "label": "Project Page",
+        "url": "https://fbaakyildiz.github.io/DataForPeople/"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/fbaakyildiz/DataForPeople"
+      }
+    ]
+  },
+  {
     "title": "Istanbul Electric Bus Optimization",
     "year": "2025",
     "category": "Transportation Analytics",
@@ -96,25 +115,6 @@
       {
         "label": "GitHub",
         "url": "https://github.com/fbaakyildiz/Germany-EV-Diffusion-System-Dynamics"
-      }
-    ]
-  },
-  {
-    "title": "DataForPeople",
-    "year": "2026",
-    "category": "Generative AI",
-    "summary": "A local FastAPI app that turns public article URLs into visual story concepts, generated images, and review decisions.",
-    "tags": ["Visual Storytelling", "Data Journalism", "Generative AI", "Human Review"],
-    "stack": ["FastAPI", "Gemini", "Hugging Face", "Vanilla JS"],
-    "accent": ["#6D5DF6", "#0F766E"],
-    "links": [
-      {
-        "label": "Project Page",
-        "url": "https://fbaakyildiz.github.io/DataForPeople/"
-      },
-      {
-        "label": "GitHub",
-        "url": "https://github.com/fbaakyildiz/DataForPeople"
       }
     ]
   }
