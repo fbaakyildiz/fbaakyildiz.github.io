@@ -445,6 +445,12 @@ h2 {
   color: #ffffff;
 }
 
+.link-row a.demo-link {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: #ffffff;
+}
+
 .empty-state {
   border: 1px dashed var(--line);
   border-radius: var(--radius);

@@ -9,6 +9,11 @@
     "accent": ["#0D2B55", "#0B7A75"],
     "links": [
       {
+        "label": "Live Demo",
+        "url": "https://www.youtube.com/watch?v=7yghCQTVTS8",
+        "variant": "demo"
+      },
+      {
         "label": "GitHub",
         "url": "https://github.com/fbaakyildiz/ThermoFischerGenAI"
       }

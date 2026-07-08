@@ -70,7 +70,7 @@ function renderProjectCard(project, index) {
   const links = (project.links || [])
     .map(
       (link, linkIndex) => `
-        <a class="${linkIndex === 0 ? "primary-link" : ""}" href="${link.url}" target="_blank" rel="noreferrer">
+        <a class="${link.variant === "demo" ? "demo-link" : linkIndex === 0 ? "primary-link" : ""}" href="${link.url}" target="_blank" rel="noreferrer">
           ${link.label}
         </a>
       `
