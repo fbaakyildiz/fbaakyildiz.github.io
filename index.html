@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Project portfolio of Fatih Berker Akyildiz: analytics, industrial engineering, GenAI, and decision-support systems."
+    />
+    <title>Fatih Berker Akyildiz | Project Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav-shell" aria-label="Primary navigation">
+        <a class="brand" href="#top" aria-label="Home">
+          <span class="brand-mark">FA</span>
+          <span>
+            <strong>Fatih Berker Akyildiz</strong>
+            <small>Project Portfolio</small>
+          </span>
+        </a>
+        <div class="nav-links">
+          <a href="#projects">Projects</a>
+          <a href="#system">System</a>
+          <a href="https://github.com/fbaakyildiz" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Industrial engineering · analytics · GenAI</p>
+          <h1>Applied decision-support projects with measurable logic.</h1>
+          <p class="hero-text">
+            A living portfolio for production-minded academic and technical work:
+            clinical AI, sports analytics, statistical process control, and model-backed
+            decision systems.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#projects">View projects</a>
+            <a class="button secondary" href="https://github.com/fbaakyildiz" target="_blank" rel="noreferrer">
+              Open GitHub
+            </a>
+          </div>
+        </div>
+        <aside class="hero-panel" aria-label="Portfolio summary">
+          <div class="metric-card">
+            <span id="projectCount">0</span>
+            <small>published projects</small>
+          </div>
+          <div class="metric-grid">
+            <div>
+              <strong>Focus</strong>
+              <span>Decision intelligence</span>
+            </div>
+            <div>
+              <strong>Stack</strong>
+              <span>Python · FastAPI · ML · LLMs</span>
+            </div>
+            <div>
+              <strong>Output</strong>
+              <span>Reports · apps · reproducible repos</span>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="toolbar" id="projects" aria-label="Project filters">
+        <div>
+          <p class="eyebrow">Projects</p>
+          <h2>Selected work</h2>
+        </div>
+        <div class="controls">
+          <label class="search">
+            <span>Search</span>
+            <input id="searchInput" type="search" placeholder="Search project, tag, or stack" />
+          </label>
+          <div class="filter-row" id="categoryFilters" aria-label="Category filters"></div>
+        </div>
+      </section>
+
+      <section class="projects-grid" id="projectsGrid" aria-live="polite"></section>
+
+      <section class="empty-state" id="emptyState" hidden>
+        <h3>No matching projects</h3>
+        <p>Try a broader search term or select all categories.</p>
+      </section>
+
+      <section class="system-section" id="system">
+        <div>
+          <p class="eyebrow">Maintained as data</p>
+          <h2>Designed for easy updates</h2>
+        </div>
+        <div class="system-grid">
+          <article>
+            <strong>1. Add a project</strong>
+            <p>Edit <code>projects.json</code> and append a new project object.</p>
+          </article>
+          <article>
+            <strong>2. Commit and push</strong>
+            <p>GitHub Pages rebuilds the public portfolio automatically.</p>
+          </article>
+          <article>
+            <strong>3. Keep repos clean</strong>
+            <p>Each card can link to a GitHub repo, live page, report, or demo video.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>© <span id="year"></span> Fatih Berker Akyildiz</span>
+      <span>Built as a static GitHub Pages portfolio.</span>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

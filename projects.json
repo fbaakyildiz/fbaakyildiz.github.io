@@ -1,0 +1,55 @@
+[
+  {
+    "title": "BrahmsAI",
+    "year": "2026",
+    "category": "Clinical AI",
+    "summary": "A local clinical decision-support system for PCT-guided antibiotic stewardship, using a hardened multi-agent LLM pipeline, structured validation, clinician review flags, and report-style output.",
+    "tags": ["Antibiotic Stewardship", "PCT", "Clinical Decision Support", "Prompt Security"],
+    "stack": ["FastAPI", "Python", "Gemini", "Vanilla JS"],
+    "accent": ["#0D2B55", "#0B7A75"],
+    "links": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/fbaakyildiz/ThermoFischerGenAI"
+      }
+    ]
+  },
+  {
+    "title": "LiveMatch Edge",
+    "year": "2026",
+    "category": "Sports Analytics",
+    "summary": "In-play football outcome prediction and betting-strategy evaluation with a clean project structure, reproducible workflow, and GitHub Pages report surface.",
+    "tags": ["Football Analytics", "Live Prediction", "Betting Strategy", "Model Evaluation"],
+    "stack": ["Python", "XGBoost", "scikit-learn", "Jupyter"],
+    "accent": ["#12355B", "#2E86AB"],
+    "links": [
+      {
+        "label": "Project Page",
+        "url": "https://fbaakyildiz.github.io/IE582-LiveMatch-Edge/"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/fbaakyildiz/IE582-LiveMatch-Edge"
+      }
+    ]
+  },
+  {
+    "title": "Possession Signal SPC",
+    "year": "2026",
+    "category": "Quality Engineering",
+    "summary": "A statistical process control project that treats football possession dynamics as process signals and studies event-driven shifts through control charts.",
+    "tags": ["SPC", "Control Charts", "Football Analytics", "Process Monitoring"],
+    "stack": ["Python", "Jupyter", "pandas", "Matplotlib"],
+    "accent": ["#234E52", "#B7791F"],
+    "links": [
+      {
+        "label": "Project Page",
+        "url": "https://fbaakyildiz.github.io/IE423-Possession-Signal-SPC/"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/fbaakyildiz/IE423-Possession-Signal-SPC"
+      }
+    ]
+  }
+]
