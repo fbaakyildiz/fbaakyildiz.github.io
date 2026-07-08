@@ -204,6 +204,44 @@ h2 {
   padding: 18px;
 }
 
+.profile-card {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #ffffff;
+  margin-bottom: 12px;
+  padding: 12px;
+}
+
+.profile-card img {
+  display: block;
+  width: 112px;
+  height: 112px;
+  border-radius: 14px;
+  object-fit: cover;
+  object-position: center 28%;
+}
+
+.profile-card strong,
+.profile-card span {
+  display: block;
+}
+
+.profile-card strong {
+  margin-bottom: 6px;
+  font-size: 18px;
+  letter-spacing: -0.03em;
+}
+
+.profile-card span {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
 .metric-card {
   border-radius: 14px;
   background: linear-gradient(135deg, var(--navy), #184e77);
@@ -468,5 +506,14 @@ h2 {
 
   .hero-actions .button {
     width: 100%;
+  }
+
+  .profile-card {
+    grid-template-columns: 88px minmax(0, 1fr);
+  }
+
+  .profile-card img {
+    width: 88px;
+    height: 88px;
   }
 }
