@@ -9,13 +9,17 @@
     "accent": ["#0D2B55", "#0B7A75"],
     "links": [
       {
+        "label": "Project Page",
+        "url": "https://fbaakyildiz.github.io/BrahmsAI/"
+      },
+      {
         "label": "Live Demo",
         "url": "https://www.youtube.com/watch?v=7yghCQTVTS8",
         "variant": "demo"
       },
       {
         "label": "GitHub",
-        "url": "https://github.com/fbaakyildiz/ThermoFischerGenAI"
+        "url": "https://github.com/fbaakyildiz/BrahmsAI"
       }
     ]
   },
@@ -66,6 +70,10 @@
     "stack": ["Python", "SimPy", "pandas", "Jupyter"],
     "accent": ["#1F4E5F", "#16A34A"],
     "links": [
+      {
+        "label": "Project Page",
+        "url": "https://fbaakyildiz.github.io/Istanbul-Electric-Bus-Optimization/"
+      },
       {
         "label": "GitHub",
         "url": "https://github.com/fbaakyildiz/Istanbul-Electric-Bus-Optimization"
