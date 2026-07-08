@@ -23,7 +23,7 @@
     "title": "LiveMatch Edge",
     "year": "2026",
     "category": "Sports Analytics",
-    "summary": "In-play football outcome prediction and betting-strategy evaluation with a clean project structure, reproducible workflow, and GitHub Pages report surface.",
+    "summary": "In-play football outcome prediction and betting-strategy evaluation using live match statistics and bookmaker odds.",
     "tags": ["Football Analytics", "Live Prediction", "Betting Strategy", "Model Evaluation"],
     "stack": ["Python", "XGBoost", "scikit-learn", "Jupyter"],
     "accent": ["#12355B", "#2E86AB"],
@@ -88,6 +88,25 @@
       {
         "label": "GitHub",
         "url": "https://github.com/fbaakyildiz/Germany-EV-Diffusion-System-Dynamics"
+      }
+    ]
+  },
+  {
+    "title": "DataForPeople",
+    "year": "2026",
+    "category": "Generative AI",
+    "summary": "A local FastAPI app that turns public article URLs into visual story concepts, generated images, and review decisions.",
+    "tags": ["Visual Storytelling", "Data Journalism", "Generative AI", "Human Review"],
+    "stack": ["FastAPI", "Gemini", "Hugging Face", "Vanilla JS"],
+    "accent": ["#6D5DF6", "#0F766E"],
+    "links": [
+      {
+        "label": "Project Page",
+        "url": "https://fbaakyildiz.github.io/DataForPeople/"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/fbaakyildiz/DataForPeople"
       }
     ]
   }
