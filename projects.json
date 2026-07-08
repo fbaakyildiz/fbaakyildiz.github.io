@@ -25,7 +25,7 @@
   },
   {
     "title": "LiveMatch Edge",
-    "year": "2026",
+    "year": "2025",
     "category": "Sports Analytics",
     "summary": "In-play football outcome prediction and betting-strategy evaluation using live match statistics and bookmaker odds.",
     "tags": ["Football Analytics", "Live Prediction", "Betting Strategy", "Model Evaluation"],
@@ -44,7 +44,7 @@
   },
   {
     "title": "Possession Signal SPC",
-    "year": "2026",
+    "year": "2024",
     "category": "Quality Engineering",
     "summary": "A statistical process control project that treats football possession dynamics as process signals and studies event-driven shifts through control charts.",
     "tags": ["SPC", "Control Charts", "Football Analytics", "Process Monitoring"],
