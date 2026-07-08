@@ -51,5 +51,20 @@
         "url": "https://github.com/fbaakyildiz/IE423-Possession-Signal-SPC"
       }
     ]
+  },
+  {
+    "title": "Istanbul Electric Bus Optimization",
+    "year": "2025",
+    "category": "Transportation Analytics",
+    "summary": "A senior design project using SimPy discrete-event simulation to select suitable Istanbul bus routes and fleet alternatives for staged electric bus deployment.",
+    "tags": ["Electric Buses", "Public Transportation", "Route Selection", "Sustainability"],
+    "stack": ["Python", "SimPy", "pandas", "Jupyter"],
+    "accent": ["#1F4E5F", "#16A34A"],
+    "links": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/fbaakyildiz/Istanbul-Electric-Bus-Optimization"
+      }
+    ]
   }
 ]
