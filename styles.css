@@ -77,14 +77,18 @@ code,
 
 .site-header {
   position: sticky;
-  top: 0;
+  top: 12px;
   z-index: 20;
+  width: min(1180px, calc(100% - 32px));
+  margin: 12px auto 0;
   overflow: hidden;
   isolation: isolate;
+  border-radius: 28px;
   background:
     linear-gradient(90deg, rgba(255, 255, 255, 0.52), rgba(224, 247, 250, 0.5), rgba(219, 234, 254, 0.48)),
     rgba(255, 255, 255, 0.46);
   border-bottom: 0;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.1);
   backdrop-filter: blur(18px) saturate(1.16);
 }
 
@@ -124,13 +128,13 @@ code,
 }
 
 .nav-shell {
-  width: min(1180px, calc(100% - 32px));
+  width: 100%;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 16px 0;
+  padding: 14px 18px;
 }
 
 @media (prefers-reduced-motion: reduce) {
