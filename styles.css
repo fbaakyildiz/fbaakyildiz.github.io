@@ -138,7 +138,8 @@ code,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .site-header::before {
+  .site-header::before,
+  .project-top {
     animation: none;
   }
 }
@@ -532,9 +533,24 @@ h2 {
 
 .project-top {
   min-height: 118px;
-  background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
+  background:
+    linear-gradient(100deg, var(--accent-a) 0%, var(--accent-b) 44%, var(--accent-a) 100%);
+  background-size: 220% 100%;
   color: #ffffff;
   padding: 18px;
+  animation: projectCardGradientDrift 10s ease-in-out infinite;
+}
+
+@keyframes projectCardGradientDrift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .project-top .meta {
