@@ -61,8 +61,20 @@ function renderProjects() {
   grid.innerHTML = visibleProjects.map(renderProjectCard).join("");
 }
 
+function mixHexWithWhite(hex, whiteAmount = 0.42) {
+  const normalized = hex.replace("#", "");
+  if (!/^[0-9a-f]{6}$/i.test(normalized)) return "#ffffff";
+
+  const value = Number.parseInt(normalized, 16);
+  const rgb = [(value >> 16) & 255, (value >> 8) & 255, value & 255];
+  const mixed = rgb.map((channel) => Math.round(channel * (1 - whiteAmount) + 255 * whiteAmount));
+
+  return `rgb(${mixed[0]}, ${mixed[1]}, ${mixed[2]})`;
+}
+
 function renderProjectCard(project, index) {
   const accent = project.accent || ["#102a43", "#2563eb"];
+  const accentSoft = mixHexWithWhite(accent[1]);
   const tags = [...(project.tags || []), ...(project.stack || [])]
     .slice(0, 8)
     .map((tag) => `<span class="tag">${tag}</span>`)
@@ -89,7 +101,7 @@ function renderProjectCard(project, index) {
     .join("");
 
   return `
-    <article class="project-card" style="--accent-a: ${accent[0]}; --accent-b: ${accent[1]};">
+    <article class="project-card" style="--accent-a: ${accent[0]}; --accent-b: ${accent[1]}; --accent-soft: ${accentSoft};">
       <div class="project-top">
         <div class="meta">${String(index + 1).padStart(2, "0")} · ${project.year} · ${project.category}</div>
         <h3>${project.title}</h3>
