@@ -142,10 +142,34 @@ code,
   padding: 10px 13px;
 }
 
+.nav-links .social-link {
+  display: inline-grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.66);
+  padding: 0;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+.nav-links .social-link img {
+  display: block;
+  width: 23px;
+  height: 23px;
+  object-fit: contain;
+}
+
 .nav-links a:hover {
   background: #ffffff;
   border-color: var(--line);
   color: var(--ink);
+}
+
+.nav-links .social-link:hover {
+  border-color: rgba(10, 102, 194, 0.38);
+  box-shadow: 0 12px 28px rgba(10, 102, 194, 0.18);
+  transform: translateY(-1px);
 }
 
 main {
