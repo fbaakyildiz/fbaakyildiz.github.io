@@ -68,13 +68,24 @@ function renderProjectCard(project, index) {
     .map((tag) => `<span class="tag">${tag}</span>`)
     .join("");
   const links = (project.links || [])
-    .map(
-      (link, linkIndex) => `
-        <a class="${link.variant === "demo" ? "demo-link" : linkIndex === 0 ? "primary-link" : ""}" href="${link.url}" target="_blank" rel="noreferrer">
-          ${link.label}
+    .map((link, linkIndex) => {
+      const isGitHub = link.label === "GitHub" || link.url.includes("github.com");
+      const className = [
+        link.variant === "demo" ? "demo-link" : linkIndex === 0 ? "primary-link" : "",
+        isGitHub ? "github-logo-button project-github-link" : "",
+      ]
+        .filter(Boolean)
+        .join(" ");
+      const label = isGitHub
+        ? `<img src="assets/githublogo.png" alt="GitHub" />`
+        : link.label;
+
+      return `
+        <a class="${className}" href="${link.url}" target="_blank" rel="noreferrer" aria-label="${isGitHub ? `Open ${project.title} on GitHub` : link.label}">
+          ${label}
         </a>
-      `
-    )
+      `;
+    })
     .join("");
 
   return `

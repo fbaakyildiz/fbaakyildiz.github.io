@@ -142,6 +142,33 @@ code,
   padding: 10px 13px;
 }
 
+.github-logo-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  line-height: 1;
+}
+
+.github-logo-button img {
+  display: block;
+  object-fit: contain;
+}
+
+.nav-links a.github-logo-button {
+  width: 106px;
+  height: 40px;
+  padding: 8px 13px;
+}
+
+.nav-links a.github-logo-button img {
+  width: 78px;
+  height: auto;
+}
+
 .nav-links .social-link {
   display: inline-grid;
   width: 40px;
@@ -165,6 +192,13 @@ code,
   background: #ffffff;
   border-color: var(--line);
   color: var(--ink);
+}
+
+.github-logo-button:hover {
+  border-color: rgba(15, 23, 42, 0.14);
+  background: #ffffff;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+  transform: translateY(-1px);
 }
 
 .nav-links .social-link:hover {
@@ -251,6 +285,16 @@ h2 {
   background: rgba(255, 255, 255, 0.62);
   border: 1px solid rgba(255, 255, 255, 0.76);
   color: var(--ink);
+}
+
+.hero-actions .github-logo-button {
+  min-width: 144px;
+  padding: 0 20px;
+}
+
+.hero-actions .github-logo-button img {
+  width: 104px;
+  height: auto;
 }
 
 .hero-panel {
@@ -508,6 +552,17 @@ h2 {
   background: #dc2626;
   border-color: #dc2626;
   color: #ffffff;
+}
+
+.link-row a.github-logo-button {
+  min-width: 104px;
+  min-height: 36px;
+  padding: 8px 13px;
+}
+
+.link-row a.github-logo-button img {
+  width: 76px;
+  height: auto;
 }
 
 .empty-state {
