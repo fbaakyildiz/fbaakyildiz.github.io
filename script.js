@@ -82,6 +82,8 @@ function renderProjectCard(project, index) {
   const links = (project.links || [])
     .map((link, linkIndex) => {
       const isGitHub = link.label === "GitHub" || link.url.includes("github.com");
+      const opensNewTab = isGitHub || link.variant === "demo";
+      const targetAttrs = opensNewTab ? ' target="_blank" rel="noreferrer"' : "";
       const className = [
         link.variant === "demo" ? "demo-link" : linkIndex === 0 ? "primary-link" : "",
         isGitHub ? "github-logo-button project-github-link" : "",
@@ -93,7 +95,7 @@ function renderProjectCard(project, index) {
         : link.label;
 
       return `
-        <a class="${className}" href="${link.url}" target="_blank" rel="noreferrer" aria-label="${isGitHub ? `Open ${project.title} on GitHub` : link.label}">
+        <a class="${className}" href="${link.url}"${targetAttrs} aria-label="${isGitHub ? `Open ${project.title} on GitHub` : link.label}">
           ${label}
         </a>
       `;
