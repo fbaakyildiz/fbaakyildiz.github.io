@@ -532,13 +532,22 @@ h2 {
 }
 
 .project-top {
-  min-height: 118px;
+  flex: 0 0 142px;
+  height: 142px;
+  overflow: hidden;
   background:
-    linear-gradient(100deg, var(--accent-a) 0%, var(--accent-b) 44%, var(--accent-a) 100%);
-  background-size: 220% 100%;
+    linear-gradient(
+      100deg,
+      var(--accent-a) 0%,
+      var(--accent-b) 28%,
+      rgba(255, 255, 255, 0.62) 50%,
+      var(--accent-b) 72%,
+      var(--accent-a) 100%
+    );
+  background-size: 260% 100%;
   color: #ffffff;
   padding: 18px;
-  animation: projectCardGradientDrift 10s ease-in-out infinite;
+  animation: projectCardGradientDrift 8s ease-in-out infinite;
 }
 
 @keyframes projectCardGradientDrift {
