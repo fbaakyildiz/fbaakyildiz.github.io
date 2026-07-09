@@ -79,9 +79,42 @@ code,
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(255, 255, 255, 0.62);
+  overflow: hidden;
+  isolation: isolate;
+  background: rgba(255, 255, 255, 0.58);
   border-bottom: 1px solid rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(16px);
+}
+
+.site-header::before {
+  position: absolute;
+  inset: -70% -30%;
+  z-index: -1;
+  content: "";
+  background:
+    radial-gradient(circle at 18% 42%, rgba(37, 99, 235, 0.2), transparent 18rem),
+    radial-gradient(circle at 52% 26%, rgba(15, 118, 110, 0.18), transparent 20rem),
+    radial-gradient(circle at 84% 52%, rgba(180, 83, 9, 0.14), transparent 17rem),
+    linear-gradient(115deg, rgba(255, 255, 255, 0.8), rgba(219, 234, 254, 0.38), rgba(204, 251, 241, 0.34));
+  background-size: 140% 140%;
+  filter: blur(14px);
+  opacity: 0.85;
+  animation: headerGradientDrift 18s ease-in-out infinite alternate;
+}
+
+@keyframes headerGradientDrift {
+  0% {
+    transform: translate3d(-4%, -2%, 0) scale(1);
+    background-position: 0% 42%;
+  }
+  50% {
+    transform: translate3d(3%, 2%, 0) scale(1.03);
+    background-position: 72% 50%;
+  }
+  100% {
+    transform: translate3d(5%, -3%, 0) scale(1.02);
+    background-position: 100% 58%;
+  }
 }
 
 .nav-shell {
@@ -92,6 +125,12 @@ code,
   justify-content: space-between;
   gap: 24px;
   padding: 16px 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header::before {
+    animation: none;
+  }
 }
 
 .brand {
