@@ -82,40 +82,44 @@ code,
   overflow: hidden;
   isolation: isolate;
   background:
-    linear-gradient(110deg, rgba(255, 255, 255, 0.58), rgba(239, 246, 255, 0.5)),
-    rgba(255, 255, 255, 0.48);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.78);
+    linear-gradient(90deg, rgba(255, 255, 255, 0.52), rgba(224, 247, 250, 0.5), rgba(219, 234, 254, 0.48)),
+    rgba(255, 255, 255, 0.46);
+  border-bottom: 0;
   backdrop-filter: blur(18px) saturate(1.16);
 }
 
 .site-header::before {
   position: absolute;
-  inset: -90% -35%;
+  inset: -55% -45%;
   z-index: -1;
   content: "";
   background:
-    radial-gradient(circle at 16% 48%, rgba(37, 99, 235, 0.5), transparent 16rem),
-    radial-gradient(circle at 48% 34%, rgba(124, 58, 237, 0.42), transparent 18rem),
-    radial-gradient(circle at 80% 48%, rgba(255, 255, 255, 0.72), transparent 15rem),
-    linear-gradient(105deg, rgba(37, 99, 235, 0.28), rgba(124, 58, 237, 0.22), rgba(255, 255, 255, 0.42));
-  background-size: 180% 180%;
-  filter: blur(10px);
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.76) 0%,
+      rgba(186, 230, 253, 0.66) 24%,
+      rgba(45, 212, 191, 0.48) 48%,
+      rgba(224, 247, 250, 0.7) 72%,
+      rgba(255, 255, 255, 0.82) 100%
+    );
+  background-size: 240% 100%;
+  filter: blur(8px);
   opacity: 0.95;
-  animation: headerGradientDrift 11s ease-in-out infinite alternate;
+  animation: headerGradientDrift 9s ease-in-out infinite;
 }
 
 @keyframes headerGradientDrift {
   0% {
-    transform: translate3d(-6%, -4%, 0) scale(1.02);
-    background-position: 0% 46%;
+    transform: translate3d(-4%, 0, 0) scale(1.02);
+    background-position: 0% 50%;
   }
   50% {
-    transform: translate3d(4%, 2%, 0) scale(1.05);
-    background-position: 62% 50%;
+    transform: translate3d(2%, 0, 0) scale(1.04);
+    background-position: 100% 50%;
   }
   100% {
-    transform: translate3d(7%, -3%, 0) scale(1.04);
-    background-position: 100% 54%;
+    transform: translate3d(-4%, 0, 0) scale(1.02);
+    background-position: 0% 50%;
   }
 }
 
