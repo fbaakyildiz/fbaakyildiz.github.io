@@ -8,7 +8,7 @@ It is a static, no-build portfolio designed to stay easy to update as new projec
 
 ## Design Direction
 
-The interface uses a lightweight liquid-glass inspired visual system: translucent surfaces, soft gradient motion, rounded sticky navigation, and project cards whose color accents remain visible through a frosted-glass treatment.
+The interface uses a Apple's lightweight liquid-glass inspired visual system: translucent surfaces, soft gradient motion where color accents remain visible through a frosted-glass treatment.
 
 ## Structure
 
