@@ -72,9 +72,22 @@ function mixHexWithWhite(hex, whiteAmount = 0.42) {
   return `rgb(${mixed[0]}, ${mixed[1]}, ${mixed[2]})`;
 }
 
+function hexToRgba(hex, alpha = 0.72) {
+  const normalized = hex.replace("#", "");
+  if (!/^[0-9a-f]{6}$/i.test(normalized)) return `rgba(255, 255, 255, ${alpha})`;
+
+  const value = Number.parseInt(normalized, 16);
+  const rgb = [(value >> 16) & 255, (value >> 8) & 255, value & 255];
+
+  return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+}
+
 function renderProjectCard(project, index) {
   const accent = project.accent || ["#102a43", "#2563eb"];
   const accentSoft = mixHexWithWhite(accent[1]);
+  const accentAGlass = hexToRgba(accent[0], 0.72);
+  const accentBGlass = hexToRgba(accent[1], 0.66);
+  const accentSoftGlass = hexToRgba(accent[1], 0.28);
   const tags = [...(project.tags || []), ...(project.stack || [])]
     .slice(0, 8)
     .map((tag) => `<span class="tag">${tag}</span>`)
@@ -103,7 +116,7 @@ function renderProjectCard(project, index) {
     .join("");
 
   return `
-    <article class="project-card" style="--accent-a: ${accent[0]}; --accent-b: ${accent[1]}; --accent-soft: ${accentSoft};">
+    <article class="project-card" style="--accent-a: ${accent[0]}; --accent-b: ${accent[1]}; --accent-soft: ${accentSoft}; --accent-a-glass: ${accentAGlass}; --accent-b-glass: ${accentBGlass}; --accent-soft-glass: ${accentSoftGlass};">
       <div class="project-top">
         <div class="meta">${String(index + 1).padStart(2, "0")} · ${project.year} · ${project.category}</div>
         <h3>${project.title}</h3>

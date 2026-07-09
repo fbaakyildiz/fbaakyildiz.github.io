@@ -523,11 +523,13 @@ h2 {
   display: flex;
   min-height: 390px;
   flex-direction: column;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255, 255, 255, 0.56);
   border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.68);
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(14px);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.48), rgba(255, 255, 255, 0.24)),
+    rgba(255, 255, 255, 0.28);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(22px) saturate(1.14);
   overflow: hidden;
 }
 
@@ -536,18 +538,19 @@ h2 {
   height: 142px;
   overflow: hidden;
   background:
-    linear-gradient(115deg, rgba(255, 255, 255, 0.22), transparent 42%, rgba(255, 255, 255, 0.16)),
+    linear-gradient(115deg, rgba(255, 255, 255, 0.3), transparent 42%, rgba(255, 255, 255, 0.2)),
     linear-gradient(
       100deg,
-      var(--accent-a) 0%,
-      var(--accent-b) 34%,
-      var(--accent-soft) 52%,
-      var(--accent-b) 68%,
-      var(--accent-a) 100%
+      var(--accent-a-glass) 0%,
+      var(--accent-b-glass) 34%,
+      var(--accent-soft-glass) 52%,
+      var(--accent-b-glass) 68%,
+      var(--accent-a-glass) 100%
     );
   background-size: 180% 100%, 240% 100%;
   color: #ffffff;
   padding: 18px;
+  backdrop-filter: blur(18px) saturate(1.18);
   animation: projectCardGradientDrift 12s ease-in-out infinite;
 }
 
