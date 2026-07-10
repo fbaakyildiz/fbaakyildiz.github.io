@@ -16,6 +16,7 @@ const cvRequestFrame = document.querySelector("#cvRequestFrame");
 const cvRequestSubmit = cvRequestPanel?.querySelector("button[type='submit']");
 let cvRequestSubmitted = false;
 let cvRequestResetTimer;
+let cvRequestSubmitFallbackTimer;
 
 document.querySelector("#year").textContent = new Date().getFullYear();
 
@@ -30,6 +31,8 @@ function closeCvRequestPanel() {
 function showCvRequestSent() {
   if (!cvRequest || !cvRequestPanel || !cvRequestButton) return;
   window.clearTimeout(cvRequestResetTimer);
+  window.clearTimeout(cvRequestSubmitFallbackTimer);
+  cvRequestSubmitted = false;
   cvRequest.classList.remove("is-open", "is-submitting");
   cvRequest.classList.add("is-sent");
   cvRequestPanel.hidden = true;
@@ -66,14 +69,19 @@ if (cvRequestButton && cvRequestPanel) {
   });
 
   cvRequestPanel.addEventListener("submit", () => {
+    window.clearTimeout(cvRequestSubmitFallbackTimer);
     cvRequestSubmitted = true;
     cvRequest?.classList.add("is-submitting");
     if (cvRequestSubmit) cvRequestSubmit.textContent = "Sending";
+
+    cvRequestSubmitFallbackTimer = window.setTimeout(() => {
+      if (!cvRequestSubmitted) return;
+      showCvRequestSent();
+    }, 900);
   });
 
   cvRequestFrame?.addEventListener("load", () => {
     if (!cvRequestSubmitted) return;
-    cvRequestSubmitted = false;
     showCvRequestSent();
   });
 }
