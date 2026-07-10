@@ -8,7 +8,7 @@ const grid = document.querySelector("#projectsGrid");
 const filters = document.querySelector("#categoryFilters");
 const searchInput = document.querySelector("#searchInput");
 const emptyState = document.querySelector("#emptyState");
-const cvRequest = document.querySelector(".cv-request");
+const cvRequest = document.querySelector("#cvRequest");
 const cvRequestButton = document.querySelector("#cvRequestButton");
 const cvRequestPanel = document.querySelector("#cvRequestPanel");
 const cvRequestEmail = document.querySelector("#cvRequestEmail");
@@ -16,7 +16,8 @@ const cvRequestEmail = document.querySelector("#cvRequestEmail");
 document.querySelector("#year").textContent = new Date().getFullYear();
 
 function closeCvRequestPanel() {
-  if (!cvRequestPanel || !cvRequestButton) return;
+  if (!cvRequest || !cvRequestPanel || !cvRequestButton) return;
+  cvRequest.classList.remove("is-open");
   cvRequestPanel.hidden = true;
   cvRequestButton.setAttribute("aria-expanded", "false");
 }
@@ -24,6 +25,7 @@ function closeCvRequestPanel() {
 if (cvRequestButton && cvRequestPanel) {
   cvRequestButton.addEventListener("click", () => {
     const isOpen = !cvRequestPanel.hidden;
+    cvRequest?.classList.toggle("is-open", !isOpen);
     cvRequestPanel.hidden = isOpen;
     cvRequestButton.setAttribute("aria-expanded", String(!isOpen));
     if (isOpen) return;
@@ -38,7 +40,7 @@ if (cvRequestButton && cvRequestPanel) {
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
       closeCvRequestPanel();
-      cvRequestButton.focus();
+      cvRequestButton.focus({ preventScroll: true });
     }
   });
 }

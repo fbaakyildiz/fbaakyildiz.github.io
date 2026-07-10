@@ -20,7 +20,7 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=cv-request-1" />
+    <link rel="stylesheet" href="styles.css?v=cv-request-inline-1" />
   </head>
   <body>
     <header class="site-header">
@@ -34,7 +34,7 @@
         </a>
         <div class="nav-links">
           <a href="#projects">Projects</a>
-          <div class="cv-request">
+          <div class="cv-request" id="cvRequest">
             <button
               class="cv-request-button"
               type="button"
@@ -51,7 +51,7 @@
               method="POST"
               hidden
             >
-              <label for="cvRequestEmail">Email address</label>
+              <label class="sr-only" for="cvRequestEmail">Email address</label>
               <div class="cv-request-row">
                 <input
                   id="cvRequestEmail"
@@ -68,12 +68,6 @@
               <input type="hidden" name="_template" value="table" />
               <input type="hidden" name="_captcha" value="false" />
               <input type="hidden" name="_next" value="https://fbaakyildiz.github.io/?cv=requested" />
-              <a
-                class="cv-mail-fallback"
-                href="mailto:fbaakyildiz@gmail.com?subject=CV%20request&body=Hi%20Fatih,%0A%0AI%20would%20like%20to%20request%20your%20CV.%20My%20email%20is:%20"
-              >
-                Use email instead
-              </a>
             </form>
           </div>
           <a
@@ -172,6 +166,6 @@
       <span>Updated on GitHub Pages.</span>
     </footer>
 
-    <script src="script.js?v=cv-request-1"></script>
+    <script src="script.js?v=cv-request-inline-1"></script>
   </body>
 </html>
