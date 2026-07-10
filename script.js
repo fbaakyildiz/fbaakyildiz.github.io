@@ -18,7 +18,8 @@ let cvRequestSubmitted = false;
 let cvRequestResetTimer;
 let cvRequestSubmitFallbackTimer;
 
-document.querySelector("#year").textContent = new Date().getFullYear();
+const year = document.querySelector("#year");
+if (year) year.textContent = new Date().getFullYear();
 
 function closeCvRequestPanel() {
   if (!cvRequest || !cvRequestPanel || !cvRequestButton) return;
