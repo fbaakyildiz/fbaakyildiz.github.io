@@ -886,22 +886,22 @@ h2 {
 
   .cv-request.is-open,
   .cv-request.is-sent {
-    width: min(340px, calc(100vw - 32px));
+    width: 226px;
   }
 
   .cv-request-row {
-    grid-template-columns: minmax(0, 1fr) 58px;
+    grid-template-columns: minmax(0, 1fr) 52px;
   }
 
   .cv-request-row input {
     font-size: 12px;
     padding-left: 10px;
-    padding-right: 4px;
+    padding-right: 0;
   }
 
   .cv-request-row button {
     font-size: 12px;
-    padding: 0 8px;
+    padding: 0;
   }
 
   h1 {
