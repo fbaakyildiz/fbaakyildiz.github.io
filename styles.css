@@ -884,8 +884,24 @@ h2 {
     width: 112px;
   }
 
-  .cv-request.is-open {
-    width: min(292px, calc(100vw - 32px));
+  .cv-request.is-open,
+  .cv-request.is-sent {
+    width: min(340px, calc(100vw - 32px));
+  }
+
+  .cv-request-row {
+    grid-template-columns: minmax(0, 1fr) 58px;
+  }
+
+  .cv-request-row input {
+    font-size: 12px;
+    padding-left: 10px;
+    padding-right: 4px;
+  }
+
+  .cv-request-row button {
+    font-size: 12px;
+    padding: 0 8px;
   }
 
   h1 {
