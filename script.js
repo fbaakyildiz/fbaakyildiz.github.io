@@ -12,19 +12,40 @@ const cvRequest = document.querySelector("#cvRequest");
 const cvRequestButton = document.querySelector("#cvRequestButton");
 const cvRequestPanel = document.querySelector("#cvRequestPanel");
 const cvRequestEmail = document.querySelector("#cvRequestEmail");
+const cvRequestFrame = document.querySelector("#cvRequestFrame");
+const cvRequestSubmit = cvRequestPanel?.querySelector("button[type='submit']");
+let cvRequestSubmitted = false;
+let cvRequestResetTimer;
 
 document.querySelector("#year").textContent = new Date().getFullYear();
 
 function closeCvRequestPanel() {
   if (!cvRequest || !cvRequestPanel || !cvRequestButton) return;
-  cvRequest.classList.remove("is-open");
+  if (cvRequest.classList.contains("is-submitting")) return;
+  cvRequest.classList.remove("is-open", "is-sent");
   cvRequestPanel.hidden = true;
   cvRequestButton.setAttribute("aria-expanded", "false");
+}
+
+function showCvRequestSent() {
+  if (!cvRequest || !cvRequestPanel || !cvRequestButton) return;
+  window.clearTimeout(cvRequestResetTimer);
+  cvRequest.classList.remove("is-open", "is-submitting");
+  cvRequest.classList.add("is-sent");
+  cvRequestPanel.hidden = true;
+  cvRequestButton.setAttribute("aria-expanded", "false");
+  cvRequestPanel.reset();
+  if (cvRequestSubmit) cvRequestSubmit.textContent = "Send";
+
+  cvRequestResetTimer = window.setTimeout(() => {
+    cvRequest.classList.remove("is-sent");
+  }, 1500);
 }
 
 if (cvRequestButton && cvRequestPanel) {
   cvRequestButton.addEventListener("click", () => {
     const isOpen = !cvRequestPanel.hidden;
+    cvRequest?.classList.remove("is-sent");
     cvRequest?.classList.toggle("is-open", !isOpen);
     cvRequestPanel.hidden = isOpen;
     cvRequestButton.setAttribute("aria-expanded", String(!isOpen));
@@ -42,6 +63,18 @@ if (cvRequestButton && cvRequestPanel) {
       closeCvRequestPanel();
       cvRequestButton.focus({ preventScroll: true });
     }
+  });
+
+  cvRequestPanel.addEventListener("submit", () => {
+    cvRequestSubmitted = true;
+    cvRequest?.classList.add("is-submitting");
+    if (cvRequestSubmit) cvRequestSubmit.textContent = "Sending";
+  });
+
+  cvRequestFrame?.addEventListener("load", () => {
+    if (!cvRequestSubmitted) return;
+    cvRequestSubmitted = false;
+    showCvRequestSent();
   });
 }
 

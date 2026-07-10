@@ -20,7 +20,7 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=cv-request-inline-1" />
+    <link rel="stylesheet" href="styles.css?v=cv-request-sent-1" />
   </head>
   <body>
     <header class="site-header">
@@ -49,6 +49,7 @@
               id="cvRequestPanel"
               action="https://formsubmit.co/fbaakyildiz@gmail.com"
               method="POST"
+              target="cvRequestFrame"
               hidden
             >
               <label class="sr-only" for="cvRequestEmail">Email address</label>
@@ -67,8 +68,14 @@
               <input type="hidden" name="message" value="This email requested your CV from the portfolio." />
               <input type="hidden" name="_template" value="table" />
               <input type="hidden" name="_captcha" value="false" />
-              <input type="hidden" name="_next" value="https://fbaakyildiz.github.io/?cv=requested" />
             </form>
+            <iframe
+              class="cv-request-frame"
+              id="cvRequestFrame"
+              name="cvRequestFrame"
+              title="CV request submission"
+              tabindex="-1"
+            ></iframe>
           </div>
           <a
             class="github-logo-button nav-github"
@@ -166,6 +173,6 @@
       <span>Updated on GitHub Pages.</span>
     </footer>
 
-    <script src="script.js?v=cv-request-inline-1"></script>
+    <script src="script.js?v=cv-request-sent-1"></script>
   </body>
 </html>
