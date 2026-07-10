@@ -8,8 +8,40 @@ const grid = document.querySelector("#projectsGrid");
 const filters = document.querySelector("#categoryFilters");
 const searchInput = document.querySelector("#searchInput");
 const emptyState = document.querySelector("#emptyState");
+const cvRequest = document.querySelector(".cv-request");
+const cvRequestButton = document.querySelector("#cvRequestButton");
+const cvRequestPanel = document.querySelector("#cvRequestPanel");
+const cvRequestEmail = document.querySelector("#cvRequestEmail");
 
 document.querySelector("#year").textContent = new Date().getFullYear();
+
+function closeCvRequestPanel() {
+  if (!cvRequestPanel || !cvRequestButton) return;
+  cvRequestPanel.hidden = true;
+  cvRequestButton.setAttribute("aria-expanded", "false");
+}
+
+if (cvRequestButton && cvRequestPanel) {
+  cvRequestButton.addEventListener("click", () => {
+    const isOpen = !cvRequestPanel.hidden;
+    cvRequestPanel.hidden = isOpen;
+    cvRequestButton.setAttribute("aria-expanded", String(!isOpen));
+    if (isOpen) return;
+    window.setTimeout(() => cvRequestEmail?.focus(), 40);
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!cvRequest || cvRequest.contains(event.target)) return;
+    closeCvRequestPanel();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeCvRequestPanel();
+      cvRequestButton.focus();
+    }
+  });
+}
 
 async function loadProjects() {
   const response = await fetch("projects.json", { cache: "no-store" });

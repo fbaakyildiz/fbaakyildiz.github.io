@@ -139,7 +139,8 @@ code,
 
 @media (prefers-reduced-motion: reduce) {
   .site-header::before,
-  .project-top {
+  .project-top,
+  .cv-request-button {
     animation: none;
   }
 }
@@ -184,6 +185,110 @@ code,
   gap: 8px;
 }
 
+.cv-request {
+  position: relative;
+}
+
+.cv-request-button {
+  min-height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  border-radius: 999px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.32)),
+    linear-gradient(120deg, rgba(20, 184, 166, 0.9), rgba(125, 211, 252, 0.72), rgba(255, 255, 255, 0.72));
+  background-size: 100% 100%, 220% 220%;
+  box-shadow: 0 12px 28px rgba(20, 184, 166, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  color: #0f3d4a;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 10px 15px;
+  transition: border-color 180ms ease, box-shadow 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.cv-request-button:hover,
+.cv-request-button[aria-expanded="true"] {
+  border-color: rgba(20, 184, 166, 0.48);
+  box-shadow: 0 15px 32px rgba(20, 184, 166, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.82);
+  color: #0b5560;
+  transform: translateY(-1px);
+}
+
+.cv-request-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 20;
+  width: min(320px, calc(100vw - 32px));
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  border-radius: 22px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0.58)),
+    linear-gradient(120deg, rgba(20, 184, 166, 0.18), rgba(186, 230, 253, 0.18), rgba(255, 255, 255, 0.2));
+  backdrop-filter: blur(24px) saturate(160%);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  padding: 14px;
+}
+
+.cv-request-panel[hidden] {
+  display: none;
+}
+
+.cv-request-panel label {
+  display: block;
+  margin: 0 0 8px;
+  color: #385063;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cv-request-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.cv-request-row input {
+  width: 100%;
+  border: 1px solid rgba(148, 163, 184, 0.42);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--navy);
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+  padding: 11px 12px;
+}
+
+.cv-request-row input:focus {
+  border-color: rgba(20, 184, 166, 0.72);
+  box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.14);
+}
+
+.cv-request-row button {
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.94), rgba(14, 165, 233, 0.76));
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 11px 13px;
+}
+
+.cv-mail-fallback {
+  display: inline-flex;
+  margin-top: 10px;
+  color: #0b7a75;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0;
+}
+
 .nav-links a {
   border: 1px solid transparent;
   border-radius: 999px;
@@ -191,6 +296,14 @@ code,
   font-size: 14px;
   font-weight: 600;
   padding: 10px 13px;
+}
+
+.nav-links .cv-mail-fallback {
+  border: 0;
+  border-radius: 0;
+  color: #0b7a75;
+  font-size: 12px;
+  padding: 0;
 }
 
 .github-logo-button {
@@ -715,6 +828,18 @@ h2 {
     width: 100%;
     overflow-x: auto;
     padding-bottom: 2px;
+  }
+
+  .cv-request {
+    position: static;
+  }
+
+  .cv-request-panel {
+    position: fixed;
+    top: 82px;
+    right: 16px;
+    left: 16px;
+    width: auto;
   }
 
   h1 {
