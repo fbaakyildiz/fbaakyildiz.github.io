@@ -565,6 +565,17 @@ h2 {
   margin-top: 8px;
 }
 
+.education-logos a {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 6px;
+}
+
+.education-logos a:focus-visible {
+  outline: 2px solid rgba(20, 184, 166, 0.7);
+  outline-offset: 3px;
+}
+
 .education-logo {
   display: block;
   width: auto;
