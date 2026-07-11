@@ -558,6 +558,25 @@ h2 {
   line-height: 1.45;
 }
 
+.education-logos {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.education-logos img {
+  display: block;
+  width: auto;
+  max-width: 58px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.education-logos img:nth-child(2) {
+  max-width: 28px;
+}
+
 .metric-card {
   border-radius: 14px;
   background: linear-gradient(135deg, var(--navy), #184e77);
