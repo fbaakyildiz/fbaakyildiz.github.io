@@ -532,7 +532,7 @@ h2 {
   padding: 12px;
 }
 
-.profile-card img {
+.profile-photo {
   display: block;
   width: 112px;
   height: 112px;
@@ -561,20 +561,20 @@ h2 {
 .education-logos {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 8px;
+  margin-top: 8px;
 }
 
 .education-logos img {
   display: block;
   width: auto;
-  max-width: 58px;
-  height: 24px;
+  height: 18px;
+  max-width: 44px;
   object-fit: contain;
 }
 
 .education-logos img:nth-child(2) {
-  max-width: 28px;
+  max-width: 18px;
 }
 
 .metric-card {
@@ -935,7 +935,7 @@ h2 {
     grid-template-columns: 88px minmax(0, 1fr);
   }
 
-  .profile-card img {
+  .profile-photo {
     width: 88px;
     height: 88px;
   }
