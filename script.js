@@ -22,9 +22,75 @@ let projectCountAnimationStarted = false;
 
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const canAnimate = !prefersReducedMotion && typeof window.anime === "function";
+const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
 const year = document.querySelector("#year");
 if (year) year.textContent = new Date().getFullYear();
+
+function setupHeaderScrollState() {
+  const header = document.querySelector(".site-header");
+  if (!header) return;
+
+  let ticking = false;
+  const update = () => {
+    header.classList.toggle("is-scrolled", window.scrollY > 14);
+    ticking = false;
+  };
+
+  update();
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    },
+    { passive: true }
+  );
+}
+
+function setupProjectCardSpotlight() {
+  if (!finePointer || !grid) return;
+
+  let activeCard = null;
+  let latestEvent = null;
+  let frame = 0;
+
+  const updateSpotlight = () => {
+    frame = 0;
+    if (!activeCard || !latestEvent) return;
+    const rect = activeCard.getBoundingClientRect();
+    const x = ((latestEvent.clientX - rect.left) / rect.width) * 100;
+    const y = ((latestEvent.clientY - rect.top) / rect.height) * 100;
+    activeCard.style.setProperty("--spotlight-x", `${x.toFixed(2)}%`);
+    activeCard.style.setProperty("--spotlight-y", `${y.toFixed(2)}%`);
+  };
+
+  grid.addEventListener(
+    "pointermove",
+    (event) => {
+      const card = event.target.closest(".project-card");
+      if (!card) return;
+      activeCard = card;
+      latestEvent = event;
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateSpotlight);
+    },
+    { passive: true }
+  );
+
+  grid.addEventListener("pointerleave", () => {
+    activeCard = null;
+    latestEvent = null;
+    if (frame) {
+      window.cancelAnimationFrame(frame);
+      frame = 0;
+    }
+  });
+}
+
+setupHeaderScrollState();
+setupProjectCardSpotlight();
 
 function runIntroAnimation() {
   if (!canAnimate) return;

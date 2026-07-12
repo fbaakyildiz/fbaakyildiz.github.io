@@ -1,6 +1,11 @@
 (() => {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const canAnimate = !prefersReducedMotion && typeof window.anime === "function";
+  const hasAnime = typeof window.anime === "function";
+  const canAnimate = !prefersReducedMotion && hasAnime;
+
+  injectSharedMotionStyles();
+  setupHeaderScrollState();
+
   if (!canAnimate) return;
 
   const findTargets = (selectors) =>
@@ -149,5 +154,48 @@
         target.textContent = raw;
       },
     });
+  }
+
+  function injectSharedMotionStyles() {
+    if (document.querySelector("[data-page-motion-styles]")) return;
+    const style = document.createElement("style");
+    style.dataset.pageMotionStyles = "true";
+    style.textContent = `
+      .site-header {
+        transition: background 240ms ease, box-shadow 240ms ease, backdrop-filter 240ms ease, border-color 240ms ease;
+      }
+
+      .site-header.is-scrolled {
+        border-color: rgba(255, 255, 255, 0.72);
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(236, 253, 245, 0.56)),
+          rgba(255, 255, 255, 0.68);
+        box-shadow: 0 22px 58px rgba(15, 23, 42, 0.14);
+        backdrop-filter: blur(22px) saturate(1.22);
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function setupHeaderScrollState() {
+    const header = document.querySelector(".site-header");
+    if (!header) return;
+
+    let ticking = false;
+    const update = () => {
+      header.classList.toggle("is-scrolled", window.scrollY > 14);
+      ticking = false;
+    };
+
+    update();
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(update);
+      },
+      { passive: true }
+    );
   }
 })();

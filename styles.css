@@ -53,6 +53,23 @@ body::before {
   opacity: 0.95;
 }
 
+@media (min-width: 769px) and (prefers-reduced-motion: no-preference) {
+  body::before {
+    animation: ambientGlassDrift 28s ease-in-out infinite;
+    will-change: transform;
+  }
+}
+
+@keyframes ambientGlassDrift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(1.6%, -1.2%, 0) scale(1.025);
+  }
+}
+
 body::after {
   z-index: -1;
   background-image:
@@ -90,6 +107,15 @@ code,
   border-bottom: 0;
   box-shadow: 0 18px 42px rgba(15, 23, 42, 0.1);
   backdrop-filter: blur(18px) saturate(1.16);
+  transition: background 240ms ease, box-shadow 240ms ease, backdrop-filter 240ms ease, transform 240ms ease;
+}
+
+.site-header.is-scrolled {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.72), rgba(224, 247, 250, 0.66), rgba(219, 234, 254, 0.68)),
+    rgba(255, 255, 255, 0.66);
+  box-shadow: 0 22px 54px rgba(15, 23, 42, 0.14);
+  backdrop-filter: blur(22px) saturate(1.24);
 }
 
 .site-header::before {
@@ -725,6 +751,9 @@ h2 {
 }
 
 .project-card {
+  --spotlight-x: 50%;
+  --spotlight-y: 0%;
+  position: relative;
   display: flex;
   min-height: 390px;
   flex-direction: column;
@@ -737,6 +766,27 @@ h2 {
   backdrop-filter: blur(22px) saturate(1.14);
   overflow: hidden;
   transition: border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease, backdrop-filter 220ms ease;
+}
+
+.project-card::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--spotlight-x) var(--spotlight-y),
+    rgba(255, 255, 255, 0.42),
+    rgba(255, 255, 255, 0.16) 16%,
+    transparent 42%
+  );
+  content: "";
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.project-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .project-top {
@@ -768,6 +818,11 @@ h2 {
     box-shadow: 0 24px 58px rgba(15, 23, 42, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.82);
     transform: translateY(-3px);
     backdrop-filter: blur(24px) saturate(1.24);
+  }
+
+  .project-card:hover::before,
+  .project-card:focus-within::before {
+    opacity: 1;
   }
 
   .project-card:hover .project-top,
