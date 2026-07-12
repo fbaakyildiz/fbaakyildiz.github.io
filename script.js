@@ -188,7 +188,7 @@ function animateProjectCount(value) {
     targets: countState,
     value,
     round: 1,
-    delay: 280,
+    delay: 1000,
     duration: 1400,
     easing: "easeOutCubic",
     update: () => {
