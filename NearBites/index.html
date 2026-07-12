@@ -103,12 +103,18 @@
         width: 42px;
         height: 42px;
         place-items: center;
+        overflow: hidden;
+        border: 1px solid rgba(249, 115, 22, 0.22);
         border-radius: 14px;
-        background: linear-gradient(135deg, var(--orange), var(--gold));
-        color: #ffffff;
-        font-family: "IBM Plex Mono", monospace;
-        font-size: 13px;
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+        background: rgba(255, 255, 255, 0.86);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65), 0 10px 22px rgba(124, 45, 18, 0.1);
+      }
+
+      .brand-mark img {
+        display: block;
+        width: 31px;
+        height: 31px;
+        object-fit: contain;
       }
 
       nav {
@@ -597,7 +603,7 @@
   <body>
     <header class="site-header">
       <a class="brand" href="#top">
-        <span class="brand-mark">NB</span>
+        <span class="brand-mark"><img src="assets/nearbites-logo.png" alt="" /></span>
         <strong>NearBites</strong>
       </a>
       <nav aria-label="Project navigation">
