@@ -589,21 +589,47 @@
           flex-direction: column;
         }
 
+        .hero-visual {
+          padding: 16px;
+        }
+
         .phone-stack {
-          height: auto;
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 14px;
+          position: relative;
+          height: 365px;
+          margin-top: 16px;
         }
 
         .phone-shot,
         .phone-shot.primary,
         .phone-shot.secondary,
         .phone-shot.tertiary {
-          position: static;
-          width: min(250px, 100%);
-          margin: 0 auto;
-          transform: none;
+          position: absolute;
+          margin: 0;
+        }
+
+        .phone-shot {
+          border-width: 6px;
+          border-radius: 22px;
+        }
+
+        .phone-shot.primary {
+          right: 5%;
+          top: 14px;
+          width: min(48vw, 188px);
+        }
+
+        .phone-shot.secondary {
+          left: 2%;
+          top: 84px;
+          width: min(43vw, 166px);
+          transform: rotate(-5deg);
+        }
+
+        .phone-shot.tertiary {
+          right: 30%;
+          bottom: 0;
+          width: min(39vw, 150px);
+          transform: rotate(5deg);
         }
 
         .role-card {
@@ -612,6 +638,26 @@
 
         .role-card > img {
           height: 290px;
+        }
+      }
+
+      @media (max-width: 420px) {
+        .phone-stack {
+          height: 330px;
+        }
+
+        .phone-shot.primary {
+          width: min(50vw, 168px);
+        }
+
+        .phone-shot.secondary {
+          top: 76px;
+          width: min(45vw, 148px);
+        }
+
+        .phone-shot.tertiary {
+          right: 28%;
+          width: min(40vw, 132px);
         }
       }
     </style>
