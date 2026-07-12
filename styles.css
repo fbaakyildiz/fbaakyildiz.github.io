@@ -276,6 +276,21 @@ code,
   pointer-events: none;
 }
 
+.cv-request.is-sent::before {
+  position: absolute;
+  left: calc(50% - 28px);
+  top: 50%;
+  z-index: 5;
+  width: 12px;
+  height: 7px;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff;
+  content: "";
+  transform: translateY(-62%) rotate(45deg) scale(0.8);
+  transform-origin: center;
+  animation: cvSentCheck 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
 .cv-request.is-sent::after {
   position: absolute;
   inset: 0;
@@ -290,6 +305,8 @@ code,
   content: "Sent";
   font-size: 13px;
   font-weight: 800;
+  padding-left: 20px;
+  animation: cvSentFill 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 .cv-request-panel {
@@ -380,6 +397,32 @@ code,
   border: 0;
   opacity: 0;
   pointer-events: none;
+}
+
+@keyframes cvSentFill {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.86);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes cvSentCheck {
+  0% {
+    opacity: 0;
+    transform: translateY(-62%) rotate(45deg) scale(0.42);
+  }
+  72% {
+    opacity: 1;
+    transform: translateY(-62%) rotate(45deg) scale(1.12);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-62%) rotate(45deg) scale(1);
+  }
 }
 
 .nav-links a {
@@ -840,9 +883,24 @@ h2 {
   transition: opacity 180ms ease;
 }
 
+.project-card::after {
+  position: absolute;
+  inset: 1px;
+  z-index: 0;
+  border-radius: calc(var(--radius) - 1px);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.36), transparent 44%),
+    linear-gradient(135deg, var(--accent-a-glass), var(--accent-b-glass), rgba(255, 255, 255, 0.54));
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.985);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
 .project-card > * {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .project-top {
@@ -871,31 +929,39 @@ h2 {
   .project-card:hover,
   .project-card:focus-within {
     border-color: rgba(255, 255, 255, 0.92);
-    box-shadow: 0 32px 72px rgba(15, 23, 42, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    transform: translateY(-8px) scale(1.012);
-    backdrop-filter: blur(26px) saturate(1.32);
+    box-shadow: 0 34px 76px rgba(15, 23, 42, 0.2), 0 14px 32px var(--accent-soft-glass), inset 0 1px 0 rgba(255, 255, 255, 0.92);
+    transform: translateY(-10px) scale(1.016);
+    backdrop-filter: blur(27px) saturate(1.38);
   }
 
   .project-card:hover::before,
   .project-card:focus-within::before {
-    opacity: 1;
+    opacity: 0.95;
+  }
+
+  .project-card:hover::after,
+  .project-card:focus-within::after {
+    opacity: 0.38;
+    transform: scale(1);
   }
 
   .project-card:hover .project-top,
   .project-card:focus-within .project-top {
-    filter: saturate(1.42) contrast(1.14) brightness(1.06);
-    backdrop-filter: blur(16px) saturate(1.42);
+    filter: saturate(1.52) contrast(1.18) brightness(1.08);
+    backdrop-filter: blur(16px) saturate(1.48);
   }
 
   .project-card:hover .tag,
   .project-card:focus-within .tag {
+    background: rgba(255, 255, 255, 0.78);
     transform: translateY(-2px);
   }
 
   .project-card:hover .link-row a.primary-link,
   .project-card:focus-within .link-row a.primary-link {
-    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.18);
-    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.54);
+    box-shadow: 0 16px 32px rgba(15, 23, 42, 0.2);
+    transform: translateY(-3px);
   }
 }
 
