@@ -595,7 +595,7 @@
 
         .phone-stack {
           position: relative;
-          height: 365px;
+          height: 292px;
           margin-top: 16px;
         }
 
@@ -613,23 +613,26 @@
         }
 
         .phone-shot.primary {
-          right: 5%;
-          top: 14px;
-          width: min(48vw, 188px);
+          right: 2%;
+          top: 6px;
+          z-index: 3;
+          width: min(54vw, 198px);
         }
 
         .phone-shot.secondary {
-          left: 2%;
-          top: 84px;
-          width: min(43vw, 166px);
-          transform: rotate(-5deg);
+          left: 0;
+          top: 42px;
+          z-index: 2;
+          width: min(49vw, 178px);
+          transform: rotate(-6deg);
         }
 
         .phone-shot.tertiary {
-          right: 30%;
-          bottom: 0;
-          width: min(39vw, 150px);
-          transform: rotate(5deg);
+          left: 29%;
+          top: 92px;
+          z-index: 1;
+          width: min(43vw, 158px);
+          transform: rotate(6deg);
         }
 
         .role-card {
@@ -643,21 +646,23 @@
 
       @media (max-width: 420px) {
         .phone-stack {
-          height: 330px;
+          height: 266px;
         }
 
         .phone-shot.primary {
-          width: min(50vw, 168px);
+          right: 0;
+          width: min(56vw, 176px);
         }
 
         .phone-shot.secondary {
-          top: 76px;
-          width: min(45vw, 148px);
+          top: 38px;
+          width: min(50vw, 154px);
         }
 
         .phone-shot.tertiary {
-          right: 28%;
-          width: min(40vw, 132px);
+          left: 30%;
+          top: 82px;
+          width: min(43vw, 132px);
         }
       }
     </style>
