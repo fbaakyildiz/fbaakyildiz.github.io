@@ -551,7 +551,36 @@
         }
 
         .phone-stack {
-          height: 520px;
+          height: 360px;
+          overflow: hidden;
+        }
+
+        .phone-shot {
+          height: 330px;
+        }
+
+        .phone-shot img {
+          height: 100%;
+          object-fit: cover;
+          object-position: top center;
+        }
+
+        .phone-shot.primary {
+          right: 8%;
+          top: 10px;
+          width: min(42vw, 230px);
+        }
+
+        .phone-shot.secondary {
+          left: 8%;
+          top: 42px;
+          width: min(38vw, 205px);
+        }
+
+        .phone-shot.tertiary {
+          right: 34%;
+          bottom: 0;
+          width: min(34vw, 182px);
         }
 
         .role-card {
@@ -595,8 +624,9 @@
 
         .phone-stack {
           position: relative;
-          height: 292px;
+          height: 278px;
           margin-top: 16px;
+          overflow: hidden;
         }
 
         .phone-shot,
@@ -608,6 +638,7 @@
         }
 
         .phone-shot {
+          height: 250px;
           border-width: 6px;
           border-radius: 22px;
         }
@@ -646,7 +677,11 @@
 
       @media (max-width: 420px) {
         .phone-stack {
-          height: 266px;
+          height: 246px;
+        }
+
+        .phone-shot {
+          height: 224px;
         }
 
         .phone-shot.primary {
