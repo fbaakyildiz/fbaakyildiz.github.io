@@ -165,10 +165,10 @@ code,
 
 .brand-mark img {
   display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 28%;
+  width: 118%;
+  height: 118%;
+  object-fit: contain;
+  object-position: center center;
 }
 
 .brand strong,
