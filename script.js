@@ -8,6 +8,7 @@ const grid = document.querySelector("#projectsGrid");
 const filters = document.querySelector("#categoryFilters");
 const searchInput = document.querySelector("#searchInput");
 const emptyState = document.querySelector("#emptyState");
+const projectCount = document.querySelector("#projectCount");
 const cvRequest = document.querySelector("#cvRequest");
 const cvRequestButton = document.querySelector("#cvRequestButton");
 const cvRequestPanel = document.querySelector("#cvRequestPanel");
@@ -18,8 +19,102 @@ let cvRequestSubmitted = false;
 let cvRequestResetTimer;
 let cvRequestSubmitFallbackTimer;
 
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const canAnimate = !prefersReducedMotion && typeof window.anime === "function";
+
 const year = document.querySelector("#year");
 if (year) year.textContent = new Date().getFullYear();
+
+function runIntroAnimation() {
+  if (!canAnimate) return;
+
+  const introTargets = [
+    ".site-header",
+    ".hero-copy .eyebrow",
+    ".hero-copy h1",
+    ".hero-text",
+    ".hero-actions",
+    ".hero-panel",
+  ];
+
+  window.anime.set(introTargets, {
+    opacity: 0,
+    translateY: 22,
+  });
+
+  window.anime
+    .timeline({
+      easing: "easeOutCubic",
+      duration: 720,
+    })
+    .add({
+      targets: ".site-header",
+      opacity: [0, 1],
+      translateY: [-12, 0],
+      duration: 560,
+    })
+    .add(
+      {
+        targets: [".hero-copy .eyebrow", ".hero-copy h1", ".hero-text", ".hero-actions"],
+        opacity: [0, 1],
+        translateY: [22, 0],
+        delay: window.anime.stagger(85),
+      },
+      "-=260"
+    )
+    .add(
+      {
+        targets: ".hero-panel",
+        opacity: [0, 1],
+        translateY: [26, 0],
+        scale: [0.985, 1],
+      },
+      "-=520"
+    );
+}
+
+function setProjectCount(value) {
+  if (!projectCount) return;
+  if (!canAnimate) {
+    projectCount.textContent = value;
+    return;
+  }
+
+  const countState = { value: 0 };
+  window.anime({
+    targets: countState,
+    value,
+    round: 1,
+    duration: 950,
+    easing: "easeOutCubic",
+    update: () => {
+      projectCount.textContent = countState.value;
+    },
+  });
+}
+
+function animateProjectCards() {
+  if (!canAnimate) return;
+
+  const cards = grid.querySelectorAll(".project-card");
+  window.anime.remove(cards);
+  window.anime.set(cards, {
+    opacity: 0,
+    translateY: 24,
+    scale: 0.985,
+  });
+  window.anime({
+    targets: cards,
+    opacity: [0, 1],
+    translateY: [24, 0],
+    scale: [0.985, 1],
+    delay: window.anime.stagger(55),
+    duration: 620,
+    easing: "easeOutCubic",
+  });
+}
+
+runIntroAnimation();
 
 function closeCvRequestPanel() {
   if (!cvRequest || !cvRequestPanel || !cvRequestButton) return;
@@ -93,7 +188,7 @@ async function loadProjects() {
     throw new Error("Could not load projects.json");
   }
   state.projects = await response.json();
-  document.querySelector("#projectCount").textContent = state.projects.length;
+  setProjectCount(state.projects.length);
   renderFilters();
   renderProjects();
 }
@@ -135,6 +230,7 @@ function renderProjects() {
   const visibleProjects = state.projects.filter(projectMatches);
   emptyState.hidden = visibleProjects.length > 0;
   grid.innerHTML = visibleProjects.map(renderProjectCard).join("");
+  animateProjectCards();
 }
 
 function mixHexWithWhite(hex, whiteAmount = 0.42) {
