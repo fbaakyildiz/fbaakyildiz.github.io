@@ -18,6 +18,7 @@ const cvRequestSubmit = cvRequestPanel?.querySelector("button[type='submit']");
 let cvRequestSubmitted = false;
 let cvRequestResetTimer;
 let cvRequestSubmitFallbackTimer;
+let projectCountAnimationStarted = false;
 
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const canAnimate = !prefersReducedMotion && typeof window.anime === "function";
@@ -80,15 +81,34 @@ function setProjectCount(value) {
     return;
   }
 
+  projectCount.textContent = "0";
+  const countTrigger = projectCount.closest(".metric-card") || projectCount;
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (!entries.some((entry) => entry.isIntersecting) || projectCountAnimationStarted) return;
+      projectCountAnimationStarted = true;
+      observer.disconnect();
+      animateProjectCount(value);
+    },
+    { threshold: 0.5 }
+  );
+  observer.observe(countTrigger);
+}
+
+function animateProjectCount(value) {
   const countState = { value: 0 };
   window.anime({
     targets: countState,
     value,
     round: 1,
-    duration: 950,
+    delay: 280,
+    duration: 1400,
     easing: "easeOutCubic",
     update: () => {
       projectCount.textContent = countState.value;
+    },
+    complete: () => {
+      projectCount.textContent = value;
     },
   });
 }
