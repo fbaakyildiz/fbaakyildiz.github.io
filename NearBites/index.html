@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="NearBites is an HCI concept for a home-cooked food sharing and delivery platform connecting local cooks, consumers, and couriers."
+    />
+    <title>NearBites | HCI Product Concept</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #15120f;
+        --muted: #75685e;
+        --line: rgba(126, 82, 45, 0.18);
+        --paper: #fff8f0;
+        --surface: rgba(255, 255, 255, 0.72);
+        --orange: #f97316;
+        --orange-deep: #c2410c;
+        --gold: #fbbf24;
+        --cream: #fff3df;
+        --brown: #412415;
+        --shadow: 0 24px 70px rgba(124, 45, 18, 0.13);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at 12% -4%, rgba(249, 115, 22, 0.26), transparent 30rem),
+          radial-gradient(circle at 88% 4%, rgba(251, 191, 36, 0.24), transparent 28rem),
+          linear-gradient(180deg, #fff7ed 0%, #fffaf3 42%, #ffffff 100%);
+        color: var(--ink);
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      body::before {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        content: "";
+        background-image:
+          linear-gradient(rgba(124, 45, 18, 0.045) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(124, 45, 18, 0.045) 1px, transparent 1px);
+        background-size: 42px 42px;
+        mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent 75%);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .site-header,
+      main,
+      footer {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 12px;
+        z-index: 20;
+        display: flex;
+        margin-top: 12px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        border-radius: 28px;
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(255, 247, 237, 0.72)),
+          linear-gradient(120deg, rgba(249, 115, 22, 0.2), rgba(251, 191, 36, 0.13), rgba(255, 255, 255, 0.28));
+        box-shadow: 0 18px 42px rgba(124, 45, 18, 0.1);
+        backdrop-filter: blur(20px) saturate(1.2);
+        padding: 14px 18px;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 42px;
+        height: 42px;
+        place-items: center;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--orange), var(--gold));
+        color: #ffffff;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 13px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+
+      nav a,
+      .button {
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      nav a {
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.68);
+        color: var(--muted);
+        padding: 10px 13px;
+      }
+
+      nav a:hover,
+      .button.secondary:hover {
+        background: #ffffff;
+        color: var(--ink);
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+        gap: 30px;
+        min-height: 650px;
+        align-items: center;
+        padding: 58px 0 70px;
+      }
+
+      .eyebrow {
+        margin: 0 0 12px;
+        color: var(--orange-deep);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 760px;
+        margin-bottom: 20px;
+        font-size: clamp(48px, 8vw, 92px);
+        line-height: 0.96;
+        letter-spacing: -0.06em;
+      }
+
+      h2 {
+        max-width: 780px;
+        margin-bottom: 0;
+        font-size: clamp(30px, 4.5vw, 54px);
+        line-height: 1.03;
+        letter-spacing: -0.045em;
+      }
+
+      h3 {
+        margin-bottom: 8px;
+        font-size: 18px;
+        letter-spacing: -0.02em;
+      }
+
+      .hero-text {
+        max-width: 710px;
+        color: var(--muted);
+        font-size: 19px;
+        line-height: 1.65;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 30px;
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 48px;
+        align-items: center;
+        justify-content: center;
+        padding: 0 18px;
+      }
+
+      .button.primary {
+        background: linear-gradient(135deg, var(--orange), var(--orange-deep));
+        color: #ffffff;
+        box-shadow: 0 18px 34px rgba(249, 115, 22, 0.24);
+      }
+
+      .button.secondary {
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.76);
+        color: var(--brown);
+      }
+
+      .hero-visual {
+        position: relative;
+        min-height: 560px;
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        border-radius: 34px;
+        background:
+          linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(255, 237, 213, 0.62)),
+          radial-gradient(circle at 18% 12%, rgba(249, 115, 22, 0.28), transparent 22rem),
+          radial-gradient(circle at 88% 74%, rgba(251, 191, 36, 0.22), transparent 24rem);
+        box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.82);
+        overflow: hidden;
+        padding: 24px;
+        backdrop-filter: blur(18px) saturate(1.12);
+      }
+
+      .logo-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.78);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.72);
+        box-shadow: 0 18px 42px rgba(124, 45, 18, 0.1);
+        padding: 14px;
+      }
+
+      .logo-card img {
+        width: 66px;
+        height: 66px;
+        object-fit: contain;
+      }
+
+      .logo-card strong,
+      .logo-card span {
+        display: block;
+      }
+
+      .logo-card strong {
+        font-size: 20px;
+      }
+
+      .logo-card span {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      .phone-stack {
+        position: relative;
+        height: 440px;
+        margin-top: 20px;
+      }
+
+      .phone-shot {
+        position: absolute;
+        width: 190px;
+        border: 8px solid rgba(255, 255, 255, 0.86);
+        border-radius: 28px;
+        background: #ffffff;
+        box-shadow: 0 28px 60px rgba(124, 45, 18, 0.18);
+        overflow: hidden;
+      }
+
+      .phone-shot img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .phone-shot.primary {
+        right: 28px;
+        top: 22px;
+        z-index: 3;
+        width: 215px;
+      }
+
+      .phone-shot.secondary {
+        left: 26px;
+        top: 100px;
+        z-index: 2;
+        transform: rotate(-5deg);
+      }
+
+      .phone-shot.tertiary {
+        right: 150px;
+        bottom: 2px;
+        z-index: 1;
+        width: 170px;
+        transform: rotate(5deg);
+        opacity: 0.9;
+      }
+
+      .section {
+        padding: 74px 0;
+      }
+
+      .section-heading {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 24px;
+      }
+
+      .section-heading p:last-child {
+        max-width: 340px;
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .glass-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .glass-card,
+      .snippet,
+      .screen-card {
+        border: 1px solid rgba(255, 255, 255, 0.76);
+        border-radius: 22px;
+        background:
+          linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(255, 247, 237, 0.58)),
+          radial-gradient(circle at 0% 0%, rgba(249, 115, 22, 0.12), transparent 18rem);
+        box-shadow: 0 18px 48px rgba(124, 45, 18, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(18px) saturate(1.12);
+      }
+
+      .glass-card {
+        padding: 22px;
+      }
+
+      .glass-card .kicker {
+        display: inline-flex;
+        margin-bottom: 22px;
+        border-radius: 999px;
+        background: rgba(249, 115, 22, 0.11);
+        color: var(--orange-deep);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 7px 10px;
+      }
+
+      .glass-card p,
+      .snippet p,
+      .screen-card p,
+      .role-card p {
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .roles {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .role-card {
+        min-height: 320px;
+        border-radius: 28px;
+        background: var(--brown);
+        color: #fffaf5;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+
+      .role-card img {
+        display: block;
+        width: 100%;
+        height: 250px;
+        object-fit: contain;
+        background: #fffaf5;
+        padding: 14px;
+      }
+
+      .role-card div {
+        padding: 18px;
+      }
+
+      .role-card p {
+        color: rgba(255, 250, 245, 0.78);
+      }
+
+      .snippet-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .snippet {
+        overflow: hidden;
+      }
+
+      .snippet-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        border-bottom: 1px solid var(--line);
+        padding: 16px 18px;
+      }
+
+      .snippet-header strong {
+        font-size: 15px;
+      }
+
+      .snippet-header span {
+        color: var(--muted);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 12px;
+      }
+
+      pre {
+        margin: 0;
+        overflow-x: auto;
+        background: rgba(65, 36, 21, 0.96);
+        color: #fff7ed;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 12px;
+        line-height: 1.65;
+        padding: 18px;
+      }
+
+      code {
+        font-family: "IBM Plex Mono", monospace;
+      }
+
+      .screen-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .screen-card {
+        overflow: hidden;
+        padding: 12px;
+      }
+
+      .screen-card img {
+        display: block;
+        width: 100%;
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow: inset 0 0 0 1px rgba(124, 45, 18, 0.08);
+      }
+
+      .screen-card h3 {
+        margin: 14px 4px 6px;
+      }
+
+      .screen-card p {
+        margin: 0 4px 4px;
+        font-size: 14px;
+      }
+
+      .results {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 18px;
+      }
+
+      .metric-panel {
+        display: grid;
+        gap: 12px;
+      }
+
+      .metric-tile {
+        border-radius: 22px;
+        background: linear-gradient(135deg, var(--orange), var(--orange-deep));
+        color: #ffffff;
+        padding: 24px;
+      }
+
+      .metric-tile span {
+        display: block;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: clamp(38px, 6vw, 64px);
+        font-weight: 600;
+        line-height: 1;
+      }
+
+      .metric-tile small {
+        display: block;
+        margin-top: 8px;
+        color: rgba(255, 255, 255, 0.82);
+        font-weight: 700;
+      }
+
+      .footer-note {
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.6;
+        padding-top: 18px;
+      }
+
+      footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 14px;
+        padding: 28px 0 40px;
+      }
+
+      @media (max-width: 900px) {
+        .hero,
+        .results,
+        .snippet-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .glass-grid,
+        .roles,
+        .screen-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .hero-visual {
+          min-height: auto;
+        }
+
+        .phone-stack {
+          height: 520px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .site-header,
+        footer {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        nav {
+          justify-content: flex-start;
+        }
+
+        h1 {
+          font-size: 46px;
+        }
+
+        .glass-grid,
+        .roles,
+        .screen-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .section-heading {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .phone-stack {
+          height: auto;
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+
+        .phone-shot,
+        .phone-shot.primary,
+        .phone-shot.secondary,
+        .phone-shot.tertiary {
+          position: static;
+          width: min(250px, 100%);
+          margin: 0 auto;
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top">
+        <span class="brand-mark">NB</span>
+        <strong>NearBites</strong>
+      </a>
+      <nav aria-label="Project navigation">
+        <a href="https://fbaakyildiz.github.io/">Portfolio</a>
+        <a href="#roles">Roles</a>
+        <a href="#snippets">Snippets</a>
+        <a href="#screens">Screens</a>
+        <a href="#results">Results</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">IE 48L HCI design project · Spring 2025</p>
+          <h1>Home-cooked meals, shared through a local platform.</h1>
+          <p class="hero-text">
+            NearBites is a mobile HCI concept for connecting home cooks, local consumers, and flexible
+            couriers. The prototype addresses two linked problems: high-cost delivery meals and household
+            food waste.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#screens">View prototype screens</a>
+            <a class="button secondary" href="#snippets">Read design logic</a>
+          </div>
+        </div>
+        <aside class="hero-visual" aria-label="NearBites prototype preview">
+          <div class="logo-card">
+            <img src="assets/nearbites-logo.png" alt="NearBites logo" />
+            <div>
+              <strong>NearBites</strong>
+              <span>Peer-to-peer food sharing, delivery coordination, and role-specific task flows.</span>
+            </div>
+          </div>
+          <div class="phone-stack">
+            <figure class="phone-shot primary">
+              <img src="assets/meal-detail.jpg" alt="NearBites meal detail screen" />
+            </figure>
+            <figure class="phone-shot secondary">
+              <img src="assets/browse.jpg" alt="NearBites meal browsing screen" />
+            </figure>
+            <figure class="phone-shot tertiary">
+              <img src="assets/courier-route.jpg" alt="NearBites courier route selection screen" />
+            </figure>
+          </div>
+        </aside>
+      </section>
+
+      <section class="section" id="overview">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Project frame</p>
+            <h2>A concept built around local supply, affordability, and trust.</h2>
+          </div>
+          <p>
+            The product model treats home kitchens as micro-suppliers and makes the transaction usable
+            for three different actors without collapsing them into one generic food-delivery flow.
+          </p>
+        </div>
+        <div class="glass-grid">
+          <article class="glass-card">
+            <span class="kicker">Domain</span>
+            <h3>Community food exchange</h3>
+            <p>
+              A neighborhood-scale marketplace for surplus or intentionally prepared home-cooked meals.
+            </p>
+          </article>
+          <article class="glass-card">
+            <span class="kicker">Method</span>
+            <h3>Human-centered design</h3>
+            <p>
+              Personas, hierarchical task analysis, role-specific system maps, Figma prototyping, and
+              structured usability testing.
+            </p>
+          </article>
+          <article class="glass-card">
+            <span class="kicker">Output</span>
+            <h3>Mobile prototype</h3>
+            <p>
+              Buyer, seller, and courier interfaces covering browse, publish, checkout, track, deliver,
+              review, and account-management tasks.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="roles">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Role architecture</p>
+            <h2>Three user groups, three task models.</h2>
+          </div>
+          <p>
+            NearBites separates role complexity early: each role sees a dashboard and navigation model
+            shaped around its most frequent decisions.
+          </p>
+        </div>
+        <div class="roles">
+          <article class="role-card">
+            <img src="assets/browse.jpg" alt="Consumer browsing screen" />
+            <div>
+              <h3>Consumer</h3>
+              <p>Find affordable meals, filter by dietary needs, inspect sellers, order, track, and review.</p>
+            </div>
+          </article>
+          <article class="role-card">
+            <img src="assets/add-meal.jpg" alt="Seller add meal screen" />
+            <div>
+              <h3>Seller</h3>
+              <p>Publish meals, set quantity limits, manage active orders, update status, and view sales.</p>
+            </div>
+          </article>
+          <article class="role-card">
+            <img src="assets/courier-route.jpg" alt="Courier route screen" />
+            <div>
+              <h3>Courier</h3>
+              <p>Accept delivery jobs, configure a working area, follow pickup/drop-off routes, and track earnings.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="snippets">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Design snippets</p>
+            <h2>Interaction logic written as product rules.</h2>
+          </div>
+          <p>
+            These snippets summarize the core design decisions behind the prototype: role routing,
+            task success criteria, and the minimum information each screen must expose.
+          </p>
+        </div>
+        <div class="snippet-grid">
+          <article class="snippet">
+            <div class="snippet-header">
+              <strong>Role routing</strong>
+              <span>navigation model</span>
+            </div>
+            <pre><code>if user.role == "consumer":
+  start = "browse meals"
+  primary_action = "filter -> inspect -> checkout"
+
+if user.role == "seller":
+  start = "seller dashboard"
+  primary_action = "add meal -> publish -> manage order"
+
+if user.role == "courier":
+  start = "available jobs"
+  primary_action = "accept -> route -> deliver"</code></pre>
+          </article>
+          <article class="snippet">
+            <div class="snippet-header">
+              <strong>Usability targets</strong>
+              <span>performance requirements</span>
+            </div>
+            <pre><code>consumer_order_time   <= 60 sec
+seller_listing_time   <= 90 sec
+courier_accept_time   <= 30 sec
+critical_success_rate >= 95%
+average_error_rate    < 1 error / task</code></pre>
+          </article>
+          <article class="snippet">
+            <div class="snippet-header">
+              <strong>Meal card contract</strong>
+              <span>information hierarchy</span>
+            </div>
+            <pre><code>{
+  "meal": "name, image, price",
+  "seller": "rating, profile, hygiene cue",
+  "decision": "dietary labels, allergens, quantity",
+  "fulfillment": "pickup or delivery",
+  "feedback": "post-order rating"
+}</code></pre>
+          </article>
+          <article class="snippet">
+            <div class="snippet-header">
+              <strong>Evaluation protocol</strong>
+              <span>field test structure</span>
+            </div>
+            <pre><code>participants = 30
+roles = { buyers: 14, sellers: 11, couriers: 5 }
+tasks = [
+  "place filtered order",
+  "list and edit meal",
+  "update preparation status",
+  "accept delivery task",
+  "rate completed transaction"
+]</code></pre>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="screens">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Prototype screens</p>
+            <h2>Representative screens from the Figma concept.</h2>
+          </div>
+          <p>
+            The selected screens show the end-to-end loop: enter the platform, search for food, inspect
+            a meal, checkout, track the order, and support seller/courier operations.
+          </p>
+        </div>
+        <div class="screen-grid">
+          <article class="screen-card">
+            <img src="assets/login.jpg" alt="NearBites login screen" />
+            <h3>Entry</h3>
+            <p>Simple sign-in and onboarding path for first-time users.</p>
+          </article>
+          <article class="screen-card">
+            <img src="assets/browse.jpg" alt="NearBites browse screen" />
+            <h3>Browse</h3>
+            <p>Filter by label, price, seller, and meal result quality.</p>
+          </article>
+          <article class="screen-card">
+            <img src="assets/meal-detail.jpg" alt="NearBites meal detail screen" />
+            <h3>Meal detail</h3>
+            <p>Combines seller trust, meal description, price, notes, and cart action.</p>
+          </article>
+          <article class="screen-card">
+            <img src="assets/checkout.jpg" alt="NearBites checkout screen" />
+            <h3>Checkout</h3>
+            <p>Payment, address, fulfillment method, promo, and order confirmation.</p>
+          </article>
+          <article class="screen-card">
+            <img src="assets/tracking.jpg" alt="NearBites order tracking screen" />
+            <h3>Tracking</h3>
+            <p>Order status, ETA, live map, and contact actions.</p>
+          </article>
+          <article class="screen-card">
+            <img src="assets/add-meal.jpg" alt="NearBites add meal screen" />
+            <h3>Add meal</h3>
+            <p>Seller-friendly publishing form for non-technical home cooks.</p>
+          </article>
+          <article class="screen-card">
+            <img src="assets/dashboard.jpg" alt="NearBites profile settings screen" />
+            <h3>Settings</h3>
+            <p>Profile, payment, addresses, notification, password, and language controls.</p>
+          </article>
+          <article class="screen-card">
+            <img src="assets/courier-route.jpg" alt="NearBites courier route screen" />
+            <h3>Courier area</h3>
+            <p>Map-based working area selection for flexible delivery coverage.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="results">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Evaluation</p>
+            <h2>The prototype was tested as an HCI workflow, not just a visual mockup.</h2>
+          </div>
+          <p>
+            Testing focused on whether users could complete role-specific tasks with low friction and
+            whether the design made the local food-sharing model understandable.
+          </p>
+        </div>
+        <div class="results">
+          <div class="metric-panel">
+            <div class="metric-tile">
+              <span>30</span>
+              <small>participants across buyer, seller, and courier roles</small>
+            </div>
+            <div class="metric-tile">
+              <span>100%</span>
+              <small>task completion reported in the structured trial</small>
+            </div>
+            <div class="metric-tile">
+              <span>78.4</span>
+              <small>average SUS score, above the common usability benchmark</small>
+            </div>
+          </div>
+          <article class="glass-card">
+            <span class="kicker">Design learning</span>
+            <h3>What improved after feedback</h3>
+            <p>
+              The redesign emphasized clearer dashboard feedback, more visible order status, and
+              stronger separation between buyer, seller, and courier work. The courier workflow remained
+              the most complex part, especially around availability and delivery acceptance.
+            </p>
+            <p>
+              The main design takeaway is that community food exchange needs more trust and clarity than
+              a restaurant-ordering app. Users need to know who cooked the meal, what it contains, how it
+              will be delivered, and what happens after purchase.
+            </p>
+            <p class="footer-note">
+              Source material: IE 48L Spring 2025 HCI report, project presentation, and exported Figma
+              prototype screens.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>NearBites · HCI product concept</span>
+      <span><a href="https://fbaakyildiz.github.io/">Back to portfolio</a></span>
+    </footer>
+  </body>
+</html>

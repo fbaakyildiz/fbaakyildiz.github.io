@@ -69,6 +69,34 @@
     ]
   },
   {
+    "title": "NearBites",
+    "year": "2025",
+    "category": "HCI Product Design",
+    "summary": "A mobile HCI concept for a home-cooked food sharing and delivery platform connecting local consumers, home cooks, and flexible couriers.",
+    "tags": [
+      "Human-Computer Interaction",
+      "Figma Prototype",
+      "Usability Testing",
+      "Food Sharing"
+    ],
+    "stack": [
+      "Figma",
+      "User Research",
+      "Task Analysis",
+      "Mobile UX"
+    ],
+    "accent": [
+      "#C2410C",
+      "#F97316"
+    ],
+    "links": [
+      {
+        "label": "Project Page",
+        "url": "https://fbaakyildiz.github.io/NearBites/"
+      }
+    ]
+  },
+  {
     "title": "Istanbul Electric Bus Optimization",
     "year": "2025",
     "category": "Transportation Analytics",
