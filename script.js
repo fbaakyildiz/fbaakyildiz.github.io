@@ -89,8 +89,29 @@ function setupProjectCardSpotlight() {
   });
 }
 
+function setupActiveNav() {
+  const projectLink = document.querySelector('.nav-links a[href="#projects"]');
+  const projectsSection = document.querySelector("#projects");
+  if (!projectLink || !projectsSection) return;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const isActive = entries.some((entry) => entry.isIntersecting);
+      projectLink.classList.toggle("is-active", isActive);
+    },
+    { threshold: 0.3, rootMargin: "-18% 0px -62% 0px" }
+  );
+  observer.observe(projectsSection);
+}
+
+function renderProjectSkeletons(count = 6) {
+  if (!grid) return;
+  grid.innerHTML = Array.from({ length: count }, () => '<article class="project-skeleton" aria-hidden="true"></article>').join("");
+}
+
 setupHeaderScrollState();
 setupProjectCardSpotlight();
+setupActiveNav();
 
 function runIntroAnimation() {
   if (!canAnimate) return;
@@ -201,6 +222,7 @@ function animateProjectCards() {
 }
 
 runIntroAnimation();
+renderProjectSkeletons();
 
 function closeCvRequestPanel() {
   if (!cvRequest || !cvRequestPanel || !cvRequestButton) return;

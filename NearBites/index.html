@@ -145,12 +145,30 @@
       }
 
       .hero {
+        position: relative;
         display: grid;
         grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+        overflow: hidden;
         gap: 30px;
         min-height: 650px;
         align-items: center;
         padding: 58px 0 70px;
+      }
+
+      .hero::before {
+        position: absolute;
+        left: -90px;
+        bottom: 40px;
+        width: min(34vw, 320px);
+        height: min(34vw, 320px);
+        pointer-events: none;
+        border: 2px solid rgba(249, 115, 22, 0.15);
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at 50% 50%, transparent 0 34%, rgba(249, 115, 22, 0.12) 35% 36%, transparent 37%),
+          conic-gradient(from 18deg, transparent 0 16%, rgba(249, 115, 22, 0.14) 16% 20%, transparent 20% 46%, rgba(251, 191, 36, 0.16) 46% 50%, transparent 50%);
+        content: "";
+        opacity: 0.72;
       }
 
       .eyebrow {
@@ -620,6 +638,13 @@
 
         .hero-visual {
           padding: 16px;
+        }
+
+        .hero::before {
+          left: -140px;
+          width: 240px;
+          height: 240px;
+          opacity: 0.28;
         }
 
         .phone-stack {
