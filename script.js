@@ -226,18 +226,18 @@ function drawIntroText(canvas, lines, time, pointer) {
   drawIntroTextDepth(ctx, width, height, lines, time);
 
   ctx.save();
-  ctx.globalAlpha = 0.18;
-  ctx.filter = "blur(18px)";
+  ctx.globalAlpha = 0.24;
+  ctx.filter = "blur(16px)";
   ctx.drawImage(mask, 0, 0, width, height);
   ctx.restore();
 
   paintCtx.clearRect(0, 0, width, height);
   const baseGradient = paintCtx.createLinearGradient(0, 0, width, height);
-  baseGradient.addColorStop(0, "rgba(255,255,255,0.72)");
-  baseGradient.addColorStop(0.2, "rgba(153,246,228,0.7)");
-  baseGradient.addColorStop(0.48, "rgba(56,189,248,0.68)");
-  baseGradient.addColorStop(0.74, "rgba(244,114,182,0.54)");
-  baseGradient.addColorStop(1, "rgba(255,255,255,0.68)");
+  baseGradient.addColorStop(0, "rgba(236,254,255,0.9)");
+  baseGradient.addColorStop(0.18, "rgba(94,234,212,0.98)");
+  baseGradient.addColorStop(0.46, "rgba(14,165,233,0.98)");
+  baseGradient.addColorStop(0.72, "rgba(236,72,153,0.88)");
+  baseGradient.addColorStop(1, "rgba(255,255,255,0.88)");
   paintCtx.fillStyle = baseGradient;
   paintCtx.fillRect(0, 0, width, height);
   paintCtx.globalCompositeOperation = "screen";
@@ -254,10 +254,10 @@ function drawIntroText(canvas, lines, time, pointer) {
     const phase = time * (0.00018 + i * 0.000006) + i * 1.37;
     const px = width * (0.5 + Math.sin(phase) * 0.46) + pointer.x * 24;
     const py = height * (0.5 + Math.cos(phase * 1.18) * 0.38) + pointer.y * 18;
-    const radius = Math.max(width, height) * (0.14 + ((i % 5) * 0.018));
+    const radius = Math.max(width, height) * (0.16 + ((i % 5) * 0.022));
     const blob = paintCtx.createRadialGradient(px, py, 0, px, py, radius);
     blob.addColorStop(0, colors[i % colors.length]);
-    blob.addColorStop(0.58, colors[(i + 2) % colors.length].replace(/0\.\d+\)/, "0.16)"));
+    blob.addColorStop(0.58, colors[(i + 2) % colors.length].replace(/0\.\d+\)/, "0.24)"));
     blob.addColorStop(1, "rgba(255,255,255,0)");
     paintCtx.fillStyle = blob;
     paintCtx.beginPath();
@@ -270,7 +270,7 @@ function drawIntroText(canvas, lines, time, pointer) {
   paintCtx.globalCompositeOperation = "source-over";
 
   ctx.save();
-  ctx.globalAlpha = 0.82;
+  ctx.globalAlpha = 0.98;
   ctx.drawImage(paint, 0, 0, width, height);
   ctx.restore();
 
@@ -296,14 +296,14 @@ function drawIntroText(canvas, lines, time, pointer) {
   ctx.font = layout.font;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.globalAlpha = 0.38;
-  ctx.strokeStyle = "rgba(15,42,67,0.2)";
+  ctx.globalAlpha = 0.3;
+  ctx.strokeStyle = "rgba(15,42,67,0.16)";
   ctx.lineWidth = Math.max(1, width * 0.0012);
   lines.forEach((line, index) => {
     ctx.strokeText(line, width * 0.5, layout.yPositions[index], layout.maxWidth);
   });
-  ctx.globalAlpha = 0.34;
-  ctx.strokeStyle = "rgba(255,255,255,0.62)";
+  ctx.globalAlpha = 0.46;
+  ctx.strokeStyle = "rgba(255,255,255,0.72)";
   ctx.lineWidth = Math.max(1, width * 0.001);
   lines.forEach((line, index) => {
     ctx.strokeText(line, width * 0.5, layout.yPositions[index] - 1, layout.maxWidth);
@@ -317,31 +317,31 @@ function drawIntroInk(canvas, time, pointer) {
   ctx.clearRect(0, 0, width, height);
 
   const wash = ctx.createLinearGradient(0, 0, width, height);
-  wash.addColorStop(0, "rgba(255,247,237,0.18)");
-  wash.addColorStop(0.28, "rgba(236,254,255,0.12)");
-  wash.addColorStop(0.58, "rgba(255,228,240,0.14)");
-  wash.addColorStop(1, "rgba(219,234,254,0.16)");
+  wash.addColorStop(0, "rgba(255,247,237,0.12)");
+  wash.addColorStop(0.28, "rgba(236,254,255,0.08)");
+  wash.addColorStop(0.58, "rgba(255,228,240,0.1)");
+  wash.addColorStop(1, "rgba(219,234,254,0.12)");
   ctx.fillStyle = wash;
   ctx.fillRect(0, 0, width, height);
 
   ctx.save();
   ctx.globalCompositeOperation = "screen";
   const palette = [
-    "rgba(45,212,191,0.42)",
-    "rgba(14,165,233,0.38)",
-    "rgba(244,114,182,0.34)",
-    "rgba(251,146,60,0.28)",
-    "rgba(255,255,255,0.42)",
+    "rgba(45,212,191,0.56)",
+    "rgba(14,165,233,0.5)",
+    "rgba(244,114,182,0.46)",
+    "rgba(251,146,60,0.34)",
+    "rgba(255,255,255,0.46)",
   ];
 
   for (let i = 0; i < 18; i += 1) {
     const phase = time * (0.00008 + i * 0.000005) + i * 0.72;
     const x = width * (0.5 + Math.sin(phase * 1.12) * 0.54) + pointer.x * 34;
     const y = height * (0.5 + Math.cos(phase) * 0.46) + pointer.y * 28;
-    const radius = Math.max(width, height) * (0.12 + (i % 6) * 0.025);
+    const radius = Math.max(width, height) * (0.14 + (i % 6) * 0.03);
     const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
     gradient.addColorStop(0, palette[i % palette.length]);
-    gradient.addColorStop(0.66, palette[(i + 1) % palette.length].replace(/0\.\d+\)/, "0.16)"));
+    gradient.addColorStop(0.66, palette[(i + 1) % palette.length].replace(/0\.\d+\)/, "0.24)"));
     gradient.addColorStop(1, "rgba(255,255,255,0)");
     ctx.fillStyle = gradient;
     ctx.beginPath();
