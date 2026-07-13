@@ -144,14 +144,14 @@ function renderIntroScript(lines, viewBoxHeight = 420) {
     <svg class="intro-script" viewBox="0 0 1200 ${viewBoxHeight}" role="img" aria-hidden="true">
       <defs>
         <linearGradient id="introGlassFill" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="rgba(255,255,255,0.92)" />
-          <stop offset="34%" stop-color="rgba(255,255,255,0.18)" />
-          <stop offset="58%" stop-color="rgba(255,255,255,0.86)" />
-          <stop offset="100%" stop-color="rgba(196,224,235,0.34)" />
+          <stop offset="0%" stop-color="rgba(255,255,255,0.98)" />
+          <stop offset="28%" stop-color="rgba(255,255,255,0.46)" />
+          <stop offset="54%" stop-color="rgba(255,255,255,0.9)" />
+          <stop offset="100%" stop-color="rgba(214,239,246,0.42)" />
         </linearGradient>
         <filter id="introGlassFilter" x="-12%" y="-34%" width="124%" height="170%">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" result="soft" />
-          <feOffset in="soft" dx="0" dy="8" result="shadow" />
+          <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" result="soft" />
+          <feOffset in="soft" dx="0" dy="5" result="shadow" />
           <feColorMatrix
             in="shadow"
             type="matrix"
@@ -179,7 +179,9 @@ function animateIntroScript() {
     strokeDashoffset: 1400,
   });
   window.anime.set(".intro-script-fill", {
-    opacity: 0.2,
+    opacity: 0.42,
+    scale: 0.985,
+    transformOrigin: "50% 50%",
   });
   window.anime.set(".intro-script-shine", {
     opacity: 0,
@@ -194,15 +196,16 @@ function animateIntroScript() {
       targets: ".intro-script-draw",
       strokeDashoffset: [1400, 0],
       delay: window.anime.stagger(180),
-      duration: 1800,
+      duration: 1350,
     })
     .add(
       {
         targets: ".intro-script-fill",
-        opacity: [0.2, 0.74],
-        duration: 680,
+        opacity: [0.42, 0.8],
+        scale: [0.985, 1],
+        duration: 780,
       },
-      "-=980"
+      "-=760"
     )
     .add(
       {
