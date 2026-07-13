@@ -172,13 +172,9 @@ function drawIntroTextMask(ctx, width, height, lines, time) {
   ctx.font = layout.font;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.lineJoin = "round";
   ctx.fillStyle = "#fff";
-  ctx.strokeStyle = "rgba(255,255,255,0.62)";
-  ctx.lineWidth = Math.max(3, width * 0.005);
   lines.forEach((line, index) => {
     const wave = Math.sin(time * 0.0012 + index * 1.7) * 2.2;
-    ctx.strokeText(line, width * 0.5, layout.yPositions[index] + wave, layout.maxWidth);
     ctx.fillText(line, width * 0.5, layout.yPositions[index] + wave, layout.maxWidth);
   });
   ctx.restore();
@@ -190,16 +186,12 @@ function drawIntroTextDepth(ctx, width, height, lines, time) {
   ctx.font = layout.font;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.lineJoin = "round";
-  ctx.shadowColor = "rgba(15, 42, 67, 0.22)";
-  ctx.shadowBlur = 24;
-  ctx.shadowOffsetY = 14;
-  ctx.strokeStyle = "rgba(15, 42, 67, 0.24)";
-  ctx.lineWidth = Math.max(4, width * 0.006);
-  ctx.fillStyle = "rgba(15, 42, 67, 0.1)";
+  ctx.shadowColor = "rgba(15, 42, 67, 0.2)";
+  ctx.shadowBlur = 28;
+  ctx.shadowOffsetY = 16;
+  ctx.fillStyle = "rgba(15, 42, 67, 0.13)";
   lines.forEach((line, index) => {
     const wave = Math.sin(time * 0.0012 + index * 1.7) * 2.2;
-    ctx.strokeText(line, width * 0.5, layout.yPositions[index] + wave, layout.maxWidth);
     ctx.fillText(line, width * 0.5, layout.yPositions[index] + wave, layout.maxWidth);
   });
   ctx.restore();
@@ -241,11 +233,11 @@ function drawIntroText(canvas, lines, time, pointer) {
 
   paintCtx.clearRect(0, 0, width, height);
   const baseGradient = paintCtx.createLinearGradient(0, 0, width, height);
-  baseGradient.addColorStop(0, "rgba(255,255,255,0.98)");
-  baseGradient.addColorStop(0.2, "rgba(153,246,228,0.94)");
-  baseGradient.addColorStop(0.48, "rgba(56,189,248,0.9)");
-  baseGradient.addColorStop(0.74, "rgba(244,114,182,0.68)");
-  baseGradient.addColorStop(1, "rgba(255,255,255,0.96)");
+  baseGradient.addColorStop(0, "rgba(255,255,255,0.72)");
+  baseGradient.addColorStop(0.2, "rgba(153,246,228,0.7)");
+  baseGradient.addColorStop(0.48, "rgba(56,189,248,0.68)");
+  baseGradient.addColorStop(0.74, "rgba(244,114,182,0.54)");
+  baseGradient.addColorStop(1, "rgba(255,255,255,0.68)");
   paintCtx.fillStyle = baseGradient;
   paintCtx.fillRect(0, 0, width, height);
   paintCtx.globalCompositeOperation = "screen";
@@ -278,7 +270,7 @@ function drawIntroText(canvas, lines, time, pointer) {
   paintCtx.globalCompositeOperation = "source-over";
 
   ctx.save();
-  ctx.globalAlpha = 1;
+  ctx.globalAlpha = 0.82;
   ctx.drawImage(paint, 0, 0, width, height);
   ctx.restore();
 
@@ -304,13 +296,15 @@ function drawIntroText(canvas, lines, time, pointer) {
   ctx.font = layout.font;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.strokeStyle = "rgba(15,42,67,0.18)";
-  ctx.lineWidth = Math.max(2, width * 0.0028);
+  ctx.globalAlpha = 0.38;
+  ctx.strokeStyle = "rgba(15,42,67,0.2)";
+  ctx.lineWidth = Math.max(1, width * 0.0012);
   lines.forEach((line, index) => {
     ctx.strokeText(line, width * 0.5, layout.yPositions[index], layout.maxWidth);
   });
+  ctx.globalAlpha = 0.34;
   ctx.strokeStyle = "rgba(255,255,255,0.62)";
-  ctx.lineWidth = Math.max(1, width * 0.0016);
+  ctx.lineWidth = Math.max(1, width * 0.001);
   lines.forEach((line, index) => {
     ctx.strokeText(line, width * 0.5, layout.yPositions[index] - 1, layout.maxWidth);
   });
@@ -323,21 +317,21 @@ function drawIntroInk(canvas, time, pointer) {
   ctx.clearRect(0, 0, width, height);
 
   const wash = ctx.createLinearGradient(0, 0, width, height);
-  wash.addColorStop(0, "rgba(255,247,237,0.28)");
-  wash.addColorStop(0.28, "rgba(236,254,255,0.18)");
-  wash.addColorStop(0.58, "rgba(255,228,240,0.22)");
-  wash.addColorStop(1, "rgba(219,234,254,0.24)");
+  wash.addColorStop(0, "rgba(255,247,237,0.18)");
+  wash.addColorStop(0.28, "rgba(236,254,255,0.12)");
+  wash.addColorStop(0.58, "rgba(255,228,240,0.14)");
+  wash.addColorStop(1, "rgba(219,234,254,0.16)");
   ctx.fillStyle = wash;
   ctx.fillRect(0, 0, width, height);
 
   ctx.save();
   ctx.globalCompositeOperation = "screen";
   const palette = [
-    "rgba(45,212,191,0.26)",
-    "rgba(14,165,233,0.24)",
-    "rgba(244,114,182,0.2)",
-    "rgba(251,146,60,0.16)",
-    "rgba(255,255,255,0.36)",
+    "rgba(45,212,191,0.42)",
+    "rgba(14,165,233,0.38)",
+    "rgba(244,114,182,0.34)",
+    "rgba(251,146,60,0.28)",
+    "rgba(255,255,255,0.42)",
   ];
 
   for (let i = 0; i < 18; i += 1) {
@@ -347,7 +341,7 @@ function drawIntroInk(canvas, time, pointer) {
     const radius = Math.max(width, height) * (0.12 + (i % 6) * 0.025);
     const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
     gradient.addColorStop(0, palette[i % palette.length]);
-    gradient.addColorStop(0.66, palette[(i + 1) % palette.length].replace(/0\.\d+\)/, "0.08)"));
+    gradient.addColorStop(0.66, palette[(i + 1) % palette.length].replace(/0\.\d+\)/, "0.16)"));
     gradient.addColorStop(1, "rgba(255,255,255,0)");
     ctx.fillStyle = gradient;
     ctx.beginPath();
