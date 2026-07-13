@@ -25,6 +25,7 @@ let cvRequestResetTimer;
 let cvRequestSubmitFallbackTimer;
 let projectCountAnimationStarted = false;
 let introFluid = null;
+let introBubbles = null;
 let pendingProjectCount = null;
 
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -131,6 +132,7 @@ function closeIntroGate() {
   document.body.classList.remove("intro-active");
   introGate.classList.add("is-hidden");
   introFluid?.stop();
+  introBubbles?.stop();
   startProjectCountWhenVisible();
 }
 
@@ -416,10 +418,169 @@ function setupIntroFluid() {
   };
 }
 
+function setupIntroBubbles() {
+  if (!introGate || prefersReducedMotion) return null;
+
+  const elements = [...introGate.querySelectorAll(".intro-glass-shape")];
+  if (!elements.length) return null;
+
+  let frame = 0;
+  let lastTime = performance.now();
+  let running = true;
+  let bubbles = [];
+
+  const positionBubbles = () => {
+    const bounds = introGate.getBoundingClientRect();
+    bubbles = elements.map((element, index) => {
+      const rect = element.getBoundingClientRect();
+      const size = Math.min(rect.width, rect.height);
+      const speedBase = bounds.width < 640 ? 54 : 86;
+      const angle = ((index * 73 + 28) * Math.PI) / 180;
+      const x = clamp(rect.left - bounds.left, 8, Math.max(8, bounds.width - rect.width - 8));
+      const y = clamp(rect.top - bounds.top, 8, Math.max(8, bounds.height - rect.height - 8));
+
+      element.style.left = "0px";
+      element.style.top = "0px";
+      element.style.right = "auto";
+      element.style.bottom = "auto";
+      element.style.setProperty("--bubble-squash-x", "1");
+      element.style.setProperty("--bubble-squash-y", "1");
+
+      return {
+        element,
+        radius: size / 2,
+        height: rect.height,
+        width: rect.width,
+        x,
+        y,
+        vx: Math.cos(angle) * (speedBase + index * 8),
+        vy: Math.sin(angle) * (speedBase + index * 7),
+      };
+    });
+  };
+
+  const render = () => {
+    for (const bubble of bubbles) {
+      bubble.element.style.transform =
+        `translate3d(${bubble.x.toFixed(1)}px, ${bubble.y.toFixed(1)}px, 0) ` +
+        `scale(var(--bubble-squash-x, 1), var(--bubble-squash-y, 1))`;
+    }
+  };
+
+  const bounce = (bubble, axis) => {
+    bubble.element.classList.remove("is-bouncing-x", "is-bouncing-y");
+    bubble.element.style.setProperty("--bubble-squash-x", axis === "x" ? "0.88" : "1.12");
+    bubble.element.style.setProperty("--bubble-squash-y", axis === "x" ? "1.12" : "0.88");
+    bubble.element.classList.add(axis === "x" ? "is-bouncing-x" : "is-bouncing-y");
+    window.setTimeout(() => {
+      bubble.element.style.setProperty("--bubble-squash-x", "1");
+      bubble.element.style.setProperty("--bubble-squash-y", "1");
+      bubble.element.classList.remove("is-bouncing-x", "is-bouncing-y");
+    }, 180);
+  };
+
+  const tick = (time) => {
+    if (!running) return;
+
+    const bounds = introGate.getBoundingClientRect();
+    const dt = Math.min((time - lastTime) / 1000, 0.032);
+    lastTime = time;
+
+    for (const bubble of bubbles) {
+      bubble.x += bubble.vx * dt;
+      bubble.y += bubble.vy * dt;
+
+      if (bubble.x <= 0) {
+        bubble.x = 0;
+        bubble.vx = Math.abs(bubble.vx);
+        bounce(bubble, "x");
+      } else if (bubble.x + bubble.width >= bounds.width) {
+        bubble.x = bounds.width - bubble.width;
+        bubble.vx = -Math.abs(bubble.vx);
+        bounce(bubble, "x");
+      }
+
+      if (bubble.y <= 0) {
+        bubble.y = 0;
+        bubble.vy = Math.abs(bubble.vy);
+        bounce(bubble, "y");
+      } else if (bubble.y + bubble.height >= bounds.height) {
+        bubble.y = bounds.height - bubble.height;
+        bubble.vy = -Math.abs(bubble.vy);
+        bounce(bubble, "y");
+      }
+    }
+
+    for (let i = 0; i < bubbles.length; i += 1) {
+      for (let j = i + 1; j < bubbles.length; j += 1) {
+        const a = bubbles[i];
+        const b = bubbles[j];
+        const ax = a.x + a.width / 2;
+        const ay = a.y + a.height / 2;
+        const bx = b.x + b.width / 2;
+        const by = b.y + b.height / 2;
+        const dx = bx - ax;
+        const dy = by - ay;
+        const distance = Math.hypot(dx, dy) || 1;
+        const minDistance = a.radius + b.radius;
+
+        if (distance >= minDistance) continue;
+
+        const nx = dx / distance;
+        const ny = dy / distance;
+        const overlap = (minDistance - distance) / 2;
+        a.x -= nx * overlap;
+        a.y -= ny * overlap;
+        b.x += nx * overlap;
+        b.y += ny * overlap;
+
+        const tangentX = -ny;
+        const tangentY = nx;
+        const aNormal = a.vx * nx + a.vy * ny;
+        const bNormal = b.vx * nx + b.vy * ny;
+        const aTangent = a.vx * tangentX + a.vy * tangentY;
+        const bTangent = b.vx * tangentX + b.vy * tangentY;
+
+        a.vx = bNormal * nx + aTangent * tangentX;
+        a.vy = bNormal * ny + aTangent * tangentY;
+        b.vx = aNormal * nx + bTangent * tangentX;
+        b.vy = aNormal * ny + bTangent * tangentY;
+
+        bounce(a, "x");
+        bounce(b, "x");
+      }
+    }
+
+    render();
+    frame = window.requestAnimationFrame(tick);
+  };
+
+  const handleResize = () => {
+    positionBubbles();
+    render();
+  };
+
+  positionBubbles();
+  render();
+  window.addEventListener("resize", handleResize);
+  window.visualViewport?.addEventListener("resize", handleResize);
+  frame = window.requestAnimationFrame(tick);
+
+  return {
+    stop() {
+      running = false;
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener("resize", handleResize);
+      window.visualViewport?.removeEventListener("resize", handleResize);
+    },
+  };
+}
+
 function setupIntroGate() {
   if (!introGate || !introTitle || !introEnter) return;
   document.body.classList.add("intro-active");
   introFluid = setupIntroFluid();
+  introBubbles = setupIntroBubbles();
   introFluid?.playReveal(1750);
 
   if (canAnimate) {
