@@ -243,12 +243,12 @@ function getIntroRevealFocus(ctx, width, height, lines, revealProgress) {
 }
 
 function fillMovingIntroBand(ctx, width, height, centerX, colors) {
-  const bandWidth = width * 0.72;
+  const bandWidth = width * 0.34;
   const gradient = ctx.createLinearGradient(centerX - bandWidth, 0, centerX + bandWidth, 0);
   gradient.addColorStop(0, "rgba(255,255,255,0)");
-  gradient.addColorStop(0.32, colors.edge);
+  gradient.addColorStop(0.22, colors.edge);
   gradient.addColorStop(0.5, colors.core);
-  gradient.addColorStop(0.68, colors.edge);
+  gradient.addColorStop(0.78, colors.edge);
   gradient.addColorStop(1, "rgba(255,255,255,0)");
   ctx.fillStyle = gradient;
   ctx.fillRect(centerX - bandWidth, 0, bandWidth * 2, height);
@@ -256,30 +256,64 @@ function fillMovingIntroBand(ctx, width, height, centerX, colors) {
 
 function drawFlowingIntroGradient(ctx, width, height, time) {
   const baseGradient = ctx.createLinearGradient(0, 0, width, height);
-  baseGradient.addColorStop(0, "rgba(224,251,252,0.72)");
-  baseGradient.addColorStop(0.24, "rgba(186,230,253,0.64)");
+  baseGradient.addColorStop(0, "rgba(207,250,254,0.7)");
+  baseGradient.addColorStop(0.26, "rgba(186,230,253,0.74)");
   baseGradient.addColorStop(0.5, "rgba(255,255,255,0.9)");
-  baseGradient.addColorStop(0.76, "rgba(251,207,232,0.68)");
-  baseGradient.addColorStop(1, "rgba(255,241,242,0.76)");
+  baseGradient.addColorStop(0.74, "rgba(251,207,232,0.76)");
+  baseGradient.addColorStop(1, "rgba(255,228,230,0.74)");
   ctx.fillStyle = baseGradient;
   ctx.fillRect(0, 0, width, height);
 
-  const period = width * 2.1;
-  const blueX = ((time * 0.145) % period) - width * 0.55;
-  const pinkX = width * 1.55 - ((time * 0.125) % period);
+  const period = width * 1.65;
+  const blueX = ((time * 0.26) % period) - width * 0.32;
+  const pinkX = width * 1.32 - ((time * 0.22) % period);
   const blue = {
-    core: "rgba(14,165,233,0.88)",
-    edge: "rgba(45,212,191,0.5)",
+    core: "rgba(0,174,255,0.98)",
+    edge: "rgba(45,212,191,0.68)",
   };
   const pink = {
-    core: "rgba(236,72,153,0.78)",
-    edge: "rgba(251,113,133,0.46)",
+    core: "rgba(236,72,153,0.94)",
+    edge: "rgba(251,113,133,0.62)",
   };
 
   [-period, 0, period].forEach((offset) => {
     fillMovingIntroBand(ctx, width, height, blueX + offset, blue);
     fillMovingIntroBand(ctx, width, height, pinkX + offset, pink);
   });
+}
+
+function drawIntroGlassHighlights(ctx, width, height, time, pointer) {
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+
+  const sweepPeriod = width * 1.4;
+  const sweepX = ((time * 0.18) % sweepPeriod) - width * 0.2 + pointer.x * 20;
+  const sweep = ctx.createLinearGradient(sweepX - width * 0.18, 0, sweepX + width * 0.18, height);
+  sweep.addColorStop(0, "rgba(255,255,255,0)");
+  sweep.addColorStop(0.42, "rgba(255,255,255,0.08)");
+  sweep.addColorStop(0.5, "rgba(255,255,255,0.62)");
+  sweep.addColorStop(0.58, "rgba(125,249,255,0.2)");
+  sweep.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.fillStyle = sweep;
+  ctx.fillRect(sweepX - width * 0.2, 0, width * 0.4, height);
+
+  for (let i = 0; i < 4; i += 1) {
+    const phase = time * (0.0007 + i * 0.00008) + i * 1.8;
+    const x = width * (0.18 + i * 0.22 + Math.sin(phase) * 0.08) + pointer.x * 16;
+    const y = height * (0.22 + (i % 2) * 0.42 + Math.cos(phase * 1.4) * 0.08) + pointer.y * 12;
+    const radius = Math.max(width, height) * (0.08 + i * 0.012);
+    const glow = ctx.createRadialGradient(x, y, 0, x, y, radius);
+    glow.addColorStop(0, "rgba(255,255,255,0.64)");
+    glow.addColorStop(0.18, "rgba(255,255,255,0.26)");
+    glow.addColorStop(0.36, "rgba(45,212,191,0.16)");
+    glow.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.ellipse(x, y, radius * 1.1, radius * 0.5, phase, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
 }
 
 function drawIntroTextMask(ctx, width, height, lines, time, revealProgress = 1) {
@@ -348,14 +382,14 @@ function drawIntroText(canvas, lines, time, pointer, revealProgress = 1) {
   paintCtx.globalCompositeOperation = "screen";
 
   const colors = [
-    "rgba(45,212,191,0.82)",
-    "rgba(14,165,233,0.74)",
-    "rgba(255,255,255,0.74)",
-    "rgba(251,113,133,0.42)",
-    "rgba(56,189,248,0.56)",
+    "rgba(45,212,191,0.38)",
+    "rgba(14,165,233,0.34)",
+    "rgba(255,255,255,0.48)",
+    "rgba(251,113,133,0.28)",
+    "rgba(56,189,248,0.3)",
   ];
 
-  for (let i = 0; i < 16; i += 1) {
+  for (let i = 0; i < 9; i += 1) {
     const phase = time * (0.00018 + i * 0.000006) + i * 1.37;
     const px = width * (0.5 + Math.sin(phase) * 0.46) + pointer.x * 24;
     const py = height * (0.5 + Math.cos(phase * 1.18) * 0.38) + pointer.y * 18;
@@ -369,6 +403,8 @@ function drawIntroText(canvas, lines, time, pointer, revealProgress = 1) {
     paintCtx.ellipse(px, py, radius * 1.22, radius * 0.74, phase, 0, Math.PI * 2);
     paintCtx.fill();
   }
+
+  drawIntroGlassHighlights(paintCtx, width, height, time, pointer);
 
   paintCtx.globalCompositeOperation = "destination-in";
   paintCtx.drawImage(mask, 0, 0, width, height);
