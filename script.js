@@ -179,25 +179,79 @@ function getIntroLineReveal(progress, index, lineCount) {
   return clamp((progress - stagger * index) / available, 0, 1);
 }
 
+function easeIntroLetter(value) {
+  return 1 - Math.pow(1 - clamp(value, 0, 1), 3);
+}
+
+function drawIntroRevealedLine(ctx, line, x, y, maxWidth, revealProgress) {
+  const chars = Array.from(line);
+  const textWidth = Math.max(ctx.measureText(line).width, 1);
+  const scale = Math.min(1, maxWidth / textWidth);
+  const visibleUnits = revealProgress * chars.length;
+  const fullChars = Math.floor(visibleUnits);
+  const partial = easeIntroLetter(visibleUnits - fullChars);
+
+  ctx.save();
+  ctx.translate(x - (textWidth * scale) / 2, y);
+  ctx.scale(scale, 1);
+  ctx.textAlign = "left";
+  ctx.textBaseline = "middle";
+
+  let cursor = 0;
+  chars.forEach((char, index) => {
+    const charWidth = ctx.measureText(char).width;
+    if (index < fullChars) {
+      ctx.fillText(char, cursor, 0);
+    } else if (index === fullChars && partial > 0) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(cursor - 1, -200, charWidth * partial + 2, 400);
+      ctx.clip();
+      ctx.fillText(char, cursor, 0);
+      ctx.restore();
+    }
+    cursor += charWidth;
+  });
+
+  ctx.restore();
+}
+
+function getIntroRevealFocus(ctx, width, height, lines, revealProgress) {
+  const layout = getIntroTextLayout(width, height, lines);
+  ctx.save();
+  ctx.font = layout.font;
+
+  let focus = { x: width * 0.5, y: height * 0.5, active: false };
+
+  lines.forEach((line, index) => {
+    const lineReveal = getIntroLineReveal(revealProgress, index, lines.length);
+    if (lineReveal <= 0 || (focus.active && lineReveal >= 1)) return;
+
+    const textWidth = Math.max(ctx.measureText(line).width, 1);
+    const scale = Math.min(1, layout.maxWidth / textWidth);
+    const visibleWidth = textWidth * scale * clamp(lineReveal, 0, 1);
+    const left = width * 0.5 - (textWidth * scale) / 2;
+    focus = {
+      x: left + visibleWidth,
+      y: layout.yPositions[index],
+      active: lineReveal < 1,
+    };
+  });
+
+  ctx.restore();
+  return focus;
+}
+
 function drawIntroTextMask(ctx, width, height, lines, time, revealProgress = 1) {
   const layout = getIntroTextLayout(width, height, lines);
   ctx.clearRect(0, 0, width, height);
   ctx.save();
   ctx.font = layout.font;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
   ctx.fillStyle = "#fff";
   lines.forEach((line, index) => {
     const wave = Math.sin(time * 0.0012 + index * 1.7) * 2.2;
-    const lineWidth = Math.min(ctx.measureText(line).width, layout.maxWidth);
     const lineReveal = getIntroLineReveal(revealProgress, index, lines.length);
-    const left = width * 0.5 - lineWidth * 0.5;
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(left - 10, 0, lineWidth * lineReveal + 20, height);
-    ctx.clip();
-    ctx.fillText(line, width * 0.5, layout.yPositions[index] + wave, layout.maxWidth);
-    ctx.restore();
+    drawIntroRevealedLine(ctx, line, width * 0.5, layout.yPositions[index] + wave, layout.maxWidth, lineReveal);
   });
   ctx.restore();
 }
@@ -206,23 +260,14 @@ function drawIntroTextDepth(ctx, width, height, lines, time, revealProgress = 1)
   const layout = getIntroTextLayout(width, height, lines);
   ctx.save();
   ctx.font = layout.font;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
   ctx.shadowColor = "rgba(15, 42, 67, 0.2)";
   ctx.shadowBlur = 28;
   ctx.shadowOffsetY = 16;
   ctx.fillStyle = "rgba(15, 42, 67, 0.13)";
   lines.forEach((line, index) => {
     const wave = Math.sin(time * 0.0012 + index * 1.7) * 2.2;
-    const lineWidth = Math.min(ctx.measureText(line).width, layout.maxWidth);
     const lineReveal = getIntroLineReveal(revealProgress, index, lines.length);
-    const left = width * 0.5 - lineWidth * 0.5;
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(left - 12, 0, lineWidth * lineReveal + 24, height);
-    ctx.clip();
-    ctx.fillText(line, width * 0.5, layout.yPositions[index] + wave, layout.maxWidth);
-    ctx.restore();
+    drawIntroRevealedLine(ctx, line, width * 0.5, layout.yPositions[index] + wave, layout.maxWidth, lineReveal);
   });
   ctx.restore();
 }
@@ -300,6 +345,34 @@ function drawIntroText(canvas, lines, time, pointer, revealProgress = 1) {
   ctx.globalAlpha = 0.98;
   ctx.drawImage(paint, 0, 0, width, height);
   ctx.restore();
+
+  const focus = getIntroRevealFocus(maskCtx, width, height, lines, revealProgress);
+  if (focus.active) {
+    paintCtx.clearRect(0, 0, width, height);
+    const shimmer = paintCtx.createRadialGradient(focus.x, focus.y, 0, focus.x, focus.y, Math.max(width, height) * 0.16);
+    shimmer.addColorStop(0, "rgba(255,255,255,0.95)");
+    shimmer.addColorStop(0.2, "rgba(255,255,255,0.54)");
+    shimmer.addColorStop(0.42, "rgba(45,212,191,0.24)");
+    shimmer.addColorStop(1, "rgba(255,255,255,0)");
+    paintCtx.fillStyle = shimmer;
+    paintCtx.fillRect(0, 0, width, height);
+
+    const streak = paintCtx.createLinearGradient(focus.x - width * 0.08, 0, focus.x + width * 0.08, height);
+    streak.addColorStop(0, "rgba(255,255,255,0)");
+    streak.addColorStop(0.5, "rgba(255,255,255,0.42)");
+    streak.addColorStop(1, "rgba(255,255,255,0)");
+    paintCtx.fillStyle = streak;
+    paintCtx.fillRect(focus.x - width * 0.08, 0, width * 0.16, height);
+    paintCtx.globalCompositeOperation = "destination-in";
+    paintCtx.drawImage(mask, 0, 0, width, height);
+    paintCtx.globalCompositeOperation = "source-over";
+
+    ctx.save();
+    ctx.globalCompositeOperation = "screen";
+    ctx.globalAlpha = 0.9;
+    ctx.drawImage(paint, 0, 0, width, height);
+    ctx.restore();
+  }
 
   ctx.save();
   ctx.globalCompositeOperation = "screen";
@@ -465,47 +538,12 @@ function setupIntroBubbles() {
         `translate3d(${bubble.x.toFixed(1)}px, ${bubble.y.toFixed(1)}px, 0) ` +
         `scale(var(--bubble-squash-x, 1), var(--bubble-squash-y, 1))`;
     }
-    updateTitleLens();
-  };
-
-  const updateTitleLens = () => {
-    if (!introTitle) return;
-
-    const titleRect = introTitle.getBoundingClientRect();
-    const influences = bubbles
-      .map((bubble) => {
-        const rect = bubble.element.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const titleX = ((centerX - titleRect.left) / titleRect.width) * 100;
-        const titleY = ((centerY - titleRect.top) / titleRect.height) * 100;
-        const clampedX = clamp(titleX, 0, 100);
-        const clampedY = clamp(titleY, 0, 100);
-        const dx = titleX - clampedX;
-        const dy = titleY - clampedY;
-        const distance = Math.hypot(dx, dy);
-        const strength = clamp(1 - distance / 22, 0, 1) * clamp(rect.width / 240, 0.35, 1);
-        return { x: clampedX, y: clampedY, strength };
-      })
-      .sort((a, b) => b.strength - a.strength)
-      .slice(0, 3);
-
-    for (let index = 0; index < 3; index += 1) {
-      const lens = influences[index] || { x: -20, y: -20, strength: 0 };
-      const slot = index + 1;
-      const whiteAlpha = lens.strength * 0.42;
-      const colorAlpha = lens.strength * 0.32;
-      introTitle.style.setProperty(`--lens-${slot}-x`, `${lens.x.toFixed(1)}%`);
-      introTitle.style.setProperty(`--lens-${slot}-y`, `${lens.y.toFixed(1)}%`);
-      introTitle.style.setProperty(`--lens-${slot}-w`, whiteAlpha.toFixed(3));
-      introTitle.style.setProperty(`--lens-${slot}-c`, colorAlpha.toFixed(3));
-    }
   };
 
   const bounce = (bubble, axis) => {
     bubble.element.classList.remove("is-bouncing-x", "is-bouncing-y");
-    bubble.element.style.setProperty("--bubble-squash-x", axis === "x" ? "0.88" : "1.12");
-    bubble.element.style.setProperty("--bubble-squash-y", axis === "x" ? "1.12" : "0.88");
+    bubble.element.style.setProperty("--bubble-squash-x", axis === "x" ? "0.97" : "1.03");
+    bubble.element.style.setProperty("--bubble-squash-y", axis === "x" ? "1.03" : "0.97");
     bubble.element.classList.add(axis === "x" ? "is-bouncing-x" : "is-bouncing-y");
     window.setTimeout(() => {
       bubble.element.style.setProperty("--bubble-squash-x", "1");

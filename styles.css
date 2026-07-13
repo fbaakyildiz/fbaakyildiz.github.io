@@ -342,17 +342,7 @@ code,
 }
 
 .intro-title::after {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  background:
-    radial-gradient(circle at var(--lens-1-x, -20%) var(--lens-1-y, -20%), rgba(255, 255, 255, var(--lens-1-w, 0)) 0 4%, rgba(45, 212, 191, var(--lens-1-c, 0)) 7%, transparent 15%),
-    radial-gradient(circle at var(--lens-2-x, -20%) var(--lens-2-y, -20%), rgba(255, 255, 255, var(--lens-2-w, 0)) 0 4%, rgba(244, 114, 182, var(--lens-2-c, 0)) 8%, transparent 16%),
-    radial-gradient(circle at var(--lens-3-x, -20%) var(--lens-3-y, -20%), rgba(255, 255, 255, var(--lens-3-w, 0)) 0 4%, rgba(14, 165, 233, var(--lens-3-c, 0)) 8%, transparent 15%);
-  content: "";
-  mix-blend-mode: screen;
-  opacity: 0.78;
-  pointer-events: none;
+  content: none;
 }
 
 .intro-text-canvas {
