@@ -230,11 +230,10 @@ function drawIntroText(canvas, lines, time, pointer, revealProgress = 1) {
   const { ctx, width, height, dpr } = fitCanvas(canvas, rect);
   const mask = drawIntroText.mask || (drawIntroText.mask = document.createElement("canvas"));
   const paint = drawIntroText.paint || (drawIntroText.paint = document.createElement("canvas"));
-  const shine = drawIntroText.shine || (drawIntroText.shine = document.createElement("canvas"));
   const pixelWidth = Math.round(width * dpr);
   const pixelHeight = Math.round(height * dpr);
 
-  [mask, paint, shine].forEach((layer) => {
+  [mask, paint].forEach((layer) => {
     if (layer.width !== pixelWidth || layer.height !== pixelHeight) {
       layer.width = pixelWidth;
       layer.height = pixelHeight;
@@ -243,10 +242,8 @@ function drawIntroText(canvas, lines, time, pointer, revealProgress = 1) {
 
   const maskCtx = mask.getContext("2d");
   const paintCtx = paint.getContext("2d");
-  const shineCtx = shine.getContext("2d");
   maskCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
   paintCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  shineCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
   drawIntroTextMask(maskCtx, width, height, lines, time, revealProgress);
 
@@ -302,23 +299,6 @@ function drawIntroText(canvas, lines, time, pointer, revealProgress = 1) {
   ctx.drawImage(paint, 0, 0, width, height);
   ctx.restore();
 
-  shineCtx.clearRect(0, 0, width, height);
-  const sweepX = ((time * 0.04) % (width * 1.8)) - width * 0.4;
-  const shineGradient = shineCtx.createLinearGradient(sweepX, 0, sweepX + width * 0.38, height);
-  shineGradient.addColorStop(0, "rgba(255,255,255,0)");
-  shineGradient.addColorStop(0.45, "rgba(255,255,255,0.46)");
-  shineGradient.addColorStop(1, "rgba(255,255,255,0)");
-  shineCtx.fillStyle = shineGradient;
-  shineCtx.fillRect(0, 0, width, height);
-  shineCtx.globalCompositeOperation = "destination-in";
-  shineCtx.drawImage(mask, 0, 0, width, height);
-  shineCtx.globalCompositeOperation = "source-over";
-
-  ctx.save();
-  ctx.globalCompositeOperation = "screen";
-  ctx.drawImage(shine, 0, 0, width, height);
-  ctx.restore();
-
   ctx.save();
   ctx.globalCompositeOperation = "screen";
   ctx.globalAlpha = 0.18;
@@ -368,19 +348,18 @@ function drawIntroInk(canvas, time, pointer) {
 }
 
 function setupIntroFluid() {
-  if (!introGate || !introInkCanvas || !introTextCanvas || !introTitle) return null;
+  if (!introGate || !introTextCanvas || !introTitle) return null;
 
   const pointer = { x: 0, y: 0 };
   const reveal = { progress: canAnimate ? 0 : 1 };
   let lines = (introTitle.dataset.lines || "Fatih Berker Akyildiz|Project Portfolio").split("|");
-  let raf = 0;
   let running = true;
+  let lastDrawTime = performance.now();
 
   const draw = (time = 0) => {
-    drawIntroInk(introInkCanvas, time, pointer);
+    if (!running) return;
+    lastDrawTime = time;
     drawIntroText(introTextCanvas, lines, time, pointer, reveal.progress);
-    if (!running || prefersReducedMotion) return;
-    raf = window.requestAnimationFrame(draw);
   };
 
   const handlePointer = (event) => {
@@ -421,12 +400,15 @@ function setupIntroFluid() {
         duration,
         easing: "easeInOutCubic",
         update: () => draw(performance.now()),
+        complete: () => draw(performance.now()),
       });
+    },
+    redraw() {
+      draw(lastDrawTime);
     },
     stop() {
       running = false;
       window.anime?.remove(reveal);
-      if (raf) window.cancelAnimationFrame(raf);
       introGate.removeEventListener("pointermove", handlePointer);
       window.removeEventListener("resize", handleResize);
       window.visualViewport?.removeEventListener("resize", handleResize);
@@ -441,12 +423,12 @@ function setupIntroGate() {
   introFluid?.playReveal(1750);
 
   if (canAnimate) {
-    window.anime.set([".intro-kicker", ".intro-title", ".intro-enter", ".intro-ink-canvas"], {
+    window.anime.set([".intro-title", ".intro-enter"], {
       opacity: 0,
       translateY: 18,
     });
     window.anime({
-      targets: [".intro-ink-canvas", ".intro-kicker", ".intro-title", ".intro-enter"],
+      targets: [".intro-title", ".intro-enter"],
       opacity: [0, 1],
       translateY: [18, 0],
       delay: window.anime.stagger(90),
