@@ -89,6 +89,19 @@ function setupProjectCardSpotlight() {
   });
 }
 
+function setupProjectCardNavigation() {
+  if (!grid) return;
+
+  grid.addEventListener("click", (event) => {
+    if (event.target.closest("a, button, input, textarea, select")) return;
+    const card = event.target.closest(".project-card");
+    if (!card || !grid.contains(card)) return;
+    const url = card.dataset.projectUrl;
+    if (!url) return;
+    window.location.href = url;
+  });
+}
+
 function setupActiveNav() {
   const projectLink = document.querySelector('.nav-links a[href="#projects"]');
   const projectsSection = document.querySelector("#projects");
@@ -111,6 +124,7 @@ function renderProjectSkeletons(count = 6) {
 
 setupHeaderScrollState();
 setupProjectCardSpotlight();
+setupProjectCardNavigation();
 setupActiveNav();
 
 function runIntroAnimation() {
@@ -364,6 +378,7 @@ function hexToRgba(hex, alpha = 0.72) {
 
 function renderProjectCard(project, index) {
   const accent = project.accent || ["#102a43", "#2563eb"];
+  const primaryLink = (project.links || [])[0]?.url || "";
   const accentSoft = mixHexWithWhite(accent[1]);
   const accentAGlass = hexToRgba(accent[0], 0.72);
   const accentBGlass = hexToRgba(accent[1], 0.66);
@@ -396,7 +411,7 @@ function renderProjectCard(project, index) {
     .join("");
 
   return `
-    <article class="project-card" style="--accent-a: ${accent[0]}; --accent-b: ${accent[1]}; --accent-soft: ${accentSoft}; --accent-a-glass: ${accentAGlass}; --accent-b-glass: ${accentBGlass}; --accent-soft-glass: ${accentSoftGlass};">
+    <article class="project-card" data-project-url="${primaryLink}" style="--accent-a: ${accent[0]}; --accent-b: ${accent[1]}; --accent-soft: ${accentSoft}; --accent-a-glass: ${accentAGlass}; --accent-b-glass: ${accentBGlass}; --accent-soft-glass: ${accentSoftGlass};">
       <div class="project-top">
         <div class="meta">${String(index + 1).padStart(2, "0")} · ${project.year} · ${project.category}</div>
         <h3>${project.title}</h3>
