@@ -18,10 +18,13 @@ const cvRequestSubmit = cvRequestPanel?.querySelector("button[type='submit']");
 const introGate = document.querySelector("#introGate");
 const introTitle = document.querySelector("#introTitle");
 const introEnter = document.querySelector("#introEnter");
+const introInkCanvas = document.querySelector("#introInkCanvas");
+const introTextCanvas = document.querySelector("#introTextCanvas");
 let cvRequestSubmitted = false;
 let cvRequestResetTimer;
 let cvRequestSubmitFallbackTimer;
 let projectCountAnimationStarted = false;
+let introFluid = null;
 
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const canAnimate = !prefersReducedMotion && typeof window.anime === "function";
@@ -126,152 +129,315 @@ function closeIntroGate() {
   if (!introGate || !introTitle) return;
   document.body.classList.remove("intro-active");
   introGate.classList.add("is-hidden");
+  introFluid?.stop();
 }
 
-function renderIntroScript(lines, viewBoxHeight = 420) {
-  const yPositions = lines.length === 1 ? [viewBoxHeight * 0.52] : [168, 322];
-  const fillText = lines
-    .map((line, index) => `<text class="intro-script-fill" x="600" y="${yPositions[index]}" text-anchor="middle">${line}</text>`)
-    .join("");
-  const drawText = lines
-    .map((line, index) => `<text class="intro-script-draw" x="600" y="${yPositions[index]}" text-anchor="middle">${line}</text>`)
-    .join("");
-  const shineText = lines
-    .map((line, index) => `<text class="intro-script-shine" x="600" y="${yPositions[index]}" text-anchor="middle">${line}</text>`)
-    .join("");
+function fitCanvas(canvas, rect) {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const width = Math.max(1, Math.round(rect.width));
+  const height = Math.max(1, Math.round(rect.height));
+  const pixelWidth = Math.round(width * dpr);
+  const pixelHeight = Math.round(height * dpr);
 
-  return `
-    <svg class="intro-script" viewBox="0 0 1200 ${viewBoxHeight}" role="img" aria-hidden="true">
-      <defs>
-        <linearGradient id="introGlassFill" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="rgba(255,255,255,0.58)" />
-          <stop offset="28%" stop-color="rgba(255,255,255,0.08)" />
-          <stop offset="55%" stop-color="rgba(232,247,255,0.34)" />
-          <stop offset="100%" stop-color="rgba(120,160,180,0.16)" />
-        </linearGradient>
-        <filter id="introGlassFilter" x="-12%" y="-34%" width="124%" height="170%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.018 0.032" numOctaves="2" seed="7" result="noise" />
-          <feDisplacementMap
-            in="SourceGraphic"
-            in2="noise"
-            scale="1.5"
-            xChannelSelector="R"
-            yChannelSelector="G"
-            result="ripple"
-          />
-          <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" result="soft" />
-          <feOffset in="soft" dx="0" dy="5" result="shadow" />
-          <feColorMatrix
-            in="shadow"
-            type="matrix"
-            values="0 0 0 0 0.20 0 0 0 0 0.22 0 0 0 0 0.26 0 0 0 0.18 0"
-            result="glassShadow"
-          />
-          <feSpecularLighting
-            in="soft"
-            surfaceScale="4"
-            specularConstant="0.28"
-            specularExponent="18"
-            lighting-color="#ffffff"
-            result="specular"
-          >
-            <fePointLight x="-320" y="-220" z="280" />
-          </feSpecularLighting>
-          <feComposite in="specular" in2="SourceAlpha" operator="in" result="specularCut" />
-          <feMerge>
-            <feMergeNode in="glassShadow" />
-            <feMergeNode in="ripple" />
-            <feMergeNode in="specularCut" />
-          </feMerge>
-        </filter>
-      </defs>
-      ${fillText}
-      ${drawText}
-      ${shineText}
-    </svg>
-  `;
+  if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+    canvas.width = pixelWidth;
+    canvas.height = pixelHeight;
+  }
+
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { ctx, width, height, dpr };
 }
 
-function animateIntroScript() {
-  if (!canAnimate) return;
+function getIntroTextLayout(width, height, lines) {
+  const isSingle = lines.length === 1;
+  const fontSize = isSingle
+    ? Math.min(width * 0.19, height * 0.58, 132)
+    : Math.min(width * 0.092, height * 0.32, 108);
+  const centerY = height * (isSingle ? 0.52 : 0.51);
+  const spacing = fontSize * 1.45;
+  const yPositions = isSingle ? [centerY] : [centerY - spacing * 0.5, centerY + spacing * 0.5];
 
-  window.anime.remove(".intro-script-draw, .intro-script-fill, .intro-script-shine");
-  window.anime.set(".intro-script-draw", {
-    strokeDashoffset: 1400,
+  return {
+    font: `900 ${fontSize}px Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`,
+    maxWidth: width * 0.94,
+    yPositions,
+  };
+}
+
+function drawIntroTextMask(ctx, width, height, lines, time) {
+  const layout = getIntroTextLayout(width, height, lines);
+  ctx.clearRect(0, 0, width, height);
+  ctx.save();
+  ctx.font = layout.font;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.lineJoin = "round";
+  ctx.fillStyle = "#fff";
+  ctx.strokeStyle = "rgba(255,255,255,0.62)";
+  ctx.lineWidth = Math.max(3, width * 0.005);
+  lines.forEach((line, index) => {
+    const wave = Math.sin(time * 0.0012 + index * 1.7) * 2.2;
+    ctx.strokeText(line, width * 0.5, layout.yPositions[index] + wave, layout.maxWidth);
+    ctx.fillText(line, width * 0.5, layout.yPositions[index] + wave, layout.maxWidth);
   });
-  window.anime.set(".intro-script-fill", {
-    opacity: 0.26,
-    scale: 0.985,
-    transformOrigin: "50% 50%",
+  ctx.restore();
+}
+
+function drawIntroTextDepth(ctx, width, height, lines, time) {
+  const layout = getIntroTextLayout(width, height, lines);
+  ctx.save();
+  ctx.font = layout.font;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.lineJoin = "round";
+  ctx.shadowColor = "rgba(15, 42, 67, 0.22)";
+  ctx.shadowBlur = 24;
+  ctx.shadowOffsetY = 14;
+  ctx.strokeStyle = "rgba(15, 42, 67, 0.24)";
+  ctx.lineWidth = Math.max(4, width * 0.006);
+  ctx.fillStyle = "rgba(15, 42, 67, 0.1)";
+  lines.forEach((line, index) => {
+    const wave = Math.sin(time * 0.0012 + index * 1.7) * 2.2;
+    ctx.strokeText(line, width * 0.5, layout.yPositions[index] + wave, layout.maxWidth);
+    ctx.fillText(line, width * 0.5, layout.yPositions[index] + wave, layout.maxWidth);
   });
-  window.anime.set(".intro-script-shine", {
-    opacity: 0,
-    strokeDashoffset: 420,
+  ctx.restore();
+}
+
+function drawIntroText(canvas, lines, time, pointer) {
+  const rect = canvas.getBoundingClientRect();
+  const { ctx, width, height, dpr } = fitCanvas(canvas, rect);
+  const mask = drawIntroText.mask || (drawIntroText.mask = document.createElement("canvas"));
+  const paint = drawIntroText.paint || (drawIntroText.paint = document.createElement("canvas"));
+  const shine = drawIntroText.shine || (drawIntroText.shine = document.createElement("canvas"));
+  const pixelWidth = Math.round(width * dpr);
+  const pixelHeight = Math.round(height * dpr);
+
+  [mask, paint, shine].forEach((layer) => {
+    if (layer.width !== pixelWidth || layer.height !== pixelHeight) {
+      layer.width = pixelWidth;
+      layer.height = pixelHeight;
+    }
   });
 
-  window.anime
-    .timeline({
-      easing: "easeOutCubic",
-    })
-    .add({
-      targets: ".intro-script-draw",
-      strokeDashoffset: [1400, 0],
-      delay: window.anime.stagger(180),
-      duration: 1350,
-    })
-    .add(
-      {
-        targets: ".intro-script-fill",
-        opacity: [0.26, 0.66],
-        scale: [0.985, 1],
-        duration: 780,
-      },
-      "-=760"
-    )
-    .add(
-      {
-        targets: ".intro-script-shine",
-        opacity: [0, 0.38, 0],
-        strokeDashoffset: [420, -980],
-        duration: 1600,
-      },
-      "-=420"
-    );
+  const maskCtx = mask.getContext("2d");
+  const paintCtx = paint.getContext("2d");
+  const shineCtx = shine.getContext("2d");
+  maskCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  paintCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  shineCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  drawIntroTextMask(maskCtx, width, height, lines, time);
+
+  ctx.clearRect(0, 0, width, height);
+  drawIntroTextDepth(ctx, width, height, lines, time);
+
+  ctx.save();
+  ctx.globalAlpha = 0.18;
+  ctx.filter = "blur(18px)";
+  ctx.drawImage(mask, 0, 0, width, height);
+  ctx.restore();
+
+  paintCtx.clearRect(0, 0, width, height);
+  const baseGradient = paintCtx.createLinearGradient(0, 0, width, height);
+  baseGradient.addColorStop(0, "rgba(255,255,255,0.98)");
+  baseGradient.addColorStop(0.2, "rgba(153,246,228,0.94)");
+  baseGradient.addColorStop(0.48, "rgba(56,189,248,0.9)");
+  baseGradient.addColorStop(0.74, "rgba(244,114,182,0.68)");
+  baseGradient.addColorStop(1, "rgba(255,255,255,0.96)");
+  paintCtx.fillStyle = baseGradient;
+  paintCtx.fillRect(0, 0, width, height);
+  paintCtx.globalCompositeOperation = "screen";
+
+  const colors = [
+    "rgba(45,212,191,0.82)",
+    "rgba(14,165,233,0.74)",
+    "rgba(255,255,255,0.74)",
+    "rgba(251,113,133,0.42)",
+    "rgba(56,189,248,0.56)",
+  ];
+
+  for (let i = 0; i < 16; i += 1) {
+    const phase = time * (0.00018 + i * 0.000006) + i * 1.37;
+    const px = width * (0.5 + Math.sin(phase) * 0.46) + pointer.x * 24;
+    const py = height * (0.5 + Math.cos(phase * 1.18) * 0.38) + pointer.y * 18;
+    const radius = Math.max(width, height) * (0.14 + ((i % 5) * 0.018));
+    const blob = paintCtx.createRadialGradient(px, py, 0, px, py, radius);
+    blob.addColorStop(0, colors[i % colors.length]);
+    blob.addColorStop(0.58, colors[(i + 2) % colors.length].replace(/0\.\d+\)/, "0.16)"));
+    blob.addColorStop(1, "rgba(255,255,255,0)");
+    paintCtx.fillStyle = blob;
+    paintCtx.beginPath();
+    paintCtx.ellipse(px, py, radius * 1.22, radius * 0.74, phase, 0, Math.PI * 2);
+    paintCtx.fill();
+  }
+
+  paintCtx.globalCompositeOperation = "destination-in";
+  paintCtx.drawImage(mask, 0, 0, width, height);
+  paintCtx.globalCompositeOperation = "source-over";
+
+  ctx.save();
+  ctx.globalAlpha = 1;
+  ctx.drawImage(paint, 0, 0, width, height);
+  ctx.restore();
+
+  shineCtx.clearRect(0, 0, width, height);
+  const sweepX = ((time * 0.04) % (width * 1.8)) - width * 0.4;
+  const shineGradient = shineCtx.createLinearGradient(sweepX, 0, sweepX + width * 0.38, height);
+  shineGradient.addColorStop(0, "rgba(255,255,255,0)");
+  shineGradient.addColorStop(0.45, "rgba(255,255,255,0.46)");
+  shineGradient.addColorStop(1, "rgba(255,255,255,0)");
+  shineCtx.fillStyle = shineGradient;
+  shineCtx.fillRect(0, 0, width, height);
+  shineCtx.globalCompositeOperation = "destination-in";
+  shineCtx.drawImage(mask, 0, 0, width, height);
+  shineCtx.globalCompositeOperation = "source-over";
+
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+  ctx.drawImage(shine, 0, 0, width, height);
+  ctx.restore();
+
+  const layout = getIntroTextLayout(width, height, lines);
+  ctx.save();
+  ctx.font = layout.font;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.strokeStyle = "rgba(15,42,67,0.18)";
+  ctx.lineWidth = Math.max(2, width * 0.0028);
+  lines.forEach((line, index) => {
+    ctx.strokeText(line, width * 0.5, layout.yPositions[index], layout.maxWidth);
+  });
+  ctx.strokeStyle = "rgba(255,255,255,0.62)";
+  ctx.lineWidth = Math.max(1, width * 0.0016);
+  lines.forEach((line, index) => {
+    ctx.strokeText(line, width * 0.5, layout.yPositions[index] - 1, layout.maxWidth);
+  });
+  ctx.restore();
+}
+
+function drawIntroInk(canvas, time, pointer) {
+  const rect = canvas.getBoundingClientRect();
+  const { ctx, width, height } = fitCanvas(canvas, rect);
+  ctx.clearRect(0, 0, width, height);
+
+  const wash = ctx.createLinearGradient(0, 0, width, height);
+  wash.addColorStop(0, "rgba(255,247,237,0.28)");
+  wash.addColorStop(0.28, "rgba(236,254,255,0.18)");
+  wash.addColorStop(0.58, "rgba(255,228,240,0.22)");
+  wash.addColorStop(1, "rgba(219,234,254,0.24)");
+  ctx.fillStyle = wash;
+  ctx.fillRect(0, 0, width, height);
+
+  ctx.save();
+  ctx.globalCompositeOperation = "screen";
+  const palette = [
+    "rgba(45,212,191,0.26)",
+    "rgba(14,165,233,0.24)",
+    "rgba(244,114,182,0.2)",
+    "rgba(251,146,60,0.16)",
+    "rgba(255,255,255,0.36)",
+  ];
+
+  for (let i = 0; i < 18; i += 1) {
+    const phase = time * (0.00008 + i * 0.000005) + i * 0.72;
+    const x = width * (0.5 + Math.sin(phase * 1.12) * 0.54) + pointer.x * 34;
+    const y = height * (0.5 + Math.cos(phase) * 0.46) + pointer.y * 28;
+    const radius = Math.max(width, height) * (0.12 + (i % 6) * 0.025);
+    const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+    gradient.addColorStop(0, palette[i % palette.length]);
+    gradient.addColorStop(0.66, palette[(i + 1) % palette.length].replace(/0\.\d+\)/, "0.08)"));
+    gradient.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.ellipse(x, y, radius * 1.55, radius * 0.62, phase, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+function setupIntroFluid() {
+  if (!introGate || !introInkCanvas || !introTextCanvas || !introTitle) return null;
+
+  const pointer = { x: 0, y: 0 };
+  let lines = (introTitle.dataset.lines || "Fatih Berker Akyildiz|Project Portfolio").split("|");
+  let raf = 0;
+  let running = true;
+
+  const draw = (time = 0) => {
+    drawIntroInk(introInkCanvas, time, pointer);
+    drawIntroText(introTextCanvas, lines, time, pointer);
+    if (!running || prefersReducedMotion) return;
+    raf = window.requestAnimationFrame(draw);
+  };
+
+  const handlePointer = (event) => {
+    const rect = introGate.getBoundingClientRect();
+    pointer.x = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+    pointer.y = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+  };
+
+  const handleResize = () => draw(performance.now());
+
+  introGate.addEventListener("pointermove", handlePointer, { passive: true });
+  window.addEventListener("resize", handleResize);
+  window.visualViewport?.addEventListener("resize", handleResize);
+
+  if ("fonts" in document) {
+    document.fonts.ready.then(() => draw(performance.now()));
+  }
+  draw(performance.now());
+
+  return {
+    setLines(nextLines) {
+      lines = nextLines;
+      draw(performance.now());
+    },
+    stop() {
+      running = false;
+      if (raf) window.cancelAnimationFrame(raf);
+      introGate.removeEventListener("pointermove", handlePointer);
+      window.removeEventListener("resize", handleResize);
+      window.visualViewport?.removeEventListener("resize", handleResize);
+    },
+  };
 }
 
 function setupIntroGate() {
   if (!introGate || !introTitle || !introEnter) return;
   document.body.classList.add("intro-active");
+  introFluid = setupIntroFluid();
 
   if (canAnimate) {
-    window.anime.set([".intro-kicker", ".intro-title", ".intro-enter"], {
+    window.anime.set([".intro-kicker", ".intro-title", ".intro-enter", ".intro-ink-canvas"], {
       opacity: 0,
       translateY: 18,
     });
     window.anime({
-      targets: [".intro-kicker", ".intro-title", ".intro-enter"],
+      targets: [".intro-ink-canvas", ".intro-kicker", ".intro-title", ".intro-enter"],
       opacity: [0, 1],
       translateY: [18, 0],
       delay: window.anime.stagger(90),
-      duration: 760,
+      duration: 820,
       easing: "easeOutCubic",
     });
-    animateIntroScript();
   }
 
   introEnter.addEventListener("click", () => {
     introEnter.disabled = true;
     introGate.classList.add("is-welcome");
     introTitle.setAttribute("aria-label", "Welcome");
-    introTitle.innerHTML = renderIntroScript(["Welcome"], 260);
+    introTitle.dataset.lines = "Welcome";
+    const titleCopy = introTitle.querySelector(".intro-title-copy");
+    if (titleCopy) titleCopy.textContent = "Welcome";
+    introFluid?.setLines(["Welcome"]);
     window.scrollTo({ top: 0, behavior: "auto" });
 
     if (!canAnimate) {
       window.setTimeout(closeIntroGate, 900);
       return;
     }
-
-    animateIntroScript();
 
     window.anime
       .timeline({

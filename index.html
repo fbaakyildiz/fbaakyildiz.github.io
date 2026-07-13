@@ -19,10 +19,11 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=intro-liquid-filter-2" />
+    <link rel="stylesheet" href="styles.css?v=intro-fluid-text-1" />
   </head>
   <body>
     <section class="intro-gate" id="introGate" aria-label="Portfolio introduction">
+      <canvas class="intro-ink-canvas" id="introInkCanvas" aria-hidden="true"></canvas>
       <div class="intro-atmosphere" aria-hidden="true">
         <span class="intro-glow intro-glow-a"></span>
         <span class="intro-glow intro-glow-b"></span>
@@ -31,58 +32,14 @@
       </div>
       <div class="intro-content">
         <p class="intro-kicker">Project Portfolio</p>
-        <h1 class="intro-title" id="introTitle" aria-label="Fatih Berker Akyildiz Project Portfolio">
-          <svg class="intro-script" viewBox="0 0 1200 420" role="img" aria-hidden="true">
-            <defs>
-              <linearGradient id="introGlassFill" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="rgba(255,255,255,0.58)" />
-                <stop offset="28%" stop-color="rgba(255,255,255,0.08)" />
-                <stop offset="55%" stop-color="rgba(232,247,255,0.34)" />
-                <stop offset="100%" stop-color="rgba(120,160,180,0.16)" />
-              </linearGradient>
-              <filter id="introGlassFilter" x="-12%" y="-34%" width="124%" height="170%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.018 0.032" numOctaves="2" seed="7" result="noise" />
-                <feDisplacementMap
-                  in="SourceGraphic"
-                  in2="noise"
-                  scale="1.5"
-                  xChannelSelector="R"
-                  yChannelSelector="G"
-                  result="ripple"
-                />
-                <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" result="soft" />
-                <feOffset in="soft" dx="0" dy="5" result="shadow" />
-                <feColorMatrix
-                  in="shadow"
-                  type="matrix"
-                  values="0 0 0 0 0.20 0 0 0 0 0.22 0 0 0 0 0.26 0 0 0 0.18 0"
-                  result="glassShadow"
-                />
-                <feSpecularLighting
-                  in="soft"
-                  surfaceScale="4"
-                  specularConstant="0.28"
-                  specularExponent="18"
-                  lighting-color="#ffffff"
-                  result="specular"
-                >
-                  <fePointLight x="-320" y="-220" z="280" />
-                </feSpecularLighting>
-                <feComposite in="specular" in2="SourceAlpha" operator="in" result="specularCut" />
-                <feMerge>
-                  <feMergeNode in="glassShadow" />
-                  <feMergeNode in="ripple" />
-                  <feMergeNode in="specularCut" />
-                </feMerge>
-              </filter>
-            </defs>
-            <text class="intro-script-fill" x="600" y="168" text-anchor="middle">Fatih Berker Akyildiz</text>
-            <text class="intro-script-fill" x="600" y="322" text-anchor="middle">Project Portfolio</text>
-            <text class="intro-script-draw" x="600" y="168" text-anchor="middle">Fatih Berker Akyildiz</text>
-            <text class="intro-script-draw" x="600" y="322" text-anchor="middle">Project Portfolio</text>
-            <text class="intro-script-shine" x="600" y="168" text-anchor="middle">Fatih Berker Akyildiz</text>
-            <text class="intro-script-shine" x="600" y="322" text-anchor="middle">Project Portfolio</text>
-          </svg>
+        <h1
+          class="intro-title intro-fluid-title"
+          id="introTitle"
+          data-lines="Fatih Berker Akyildiz|Project Portfolio"
+          aria-label="Fatih Berker Akyildiz Project Portfolio"
+        >
+          <canvas class="intro-text-canvas" id="introTextCanvas" aria-hidden="true"></canvas>
+          <span class="intro-title-copy">Fatih Berker Akyildiz Project Portfolio</span>
         </h1>
         <button class="intro-enter" type="button" id="introEnter">Go to portfolio</button>
       </div>
@@ -247,6 +204,6 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script src="script.js?v=intro-liquid-filter-2"></script>
+    <script src="script.js?v=intro-fluid-text-1"></script>
   </body>
 </html>
