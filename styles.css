@@ -229,12 +229,12 @@ code,
 }
 
 .intro-glass-shape::before {
-  border: 1px solid rgba(255, 255, 255, 0.42);
   background:
-    radial-gradient(ellipse at 27% 22%, rgba(255, 255, 255, 0.62), transparent 17%),
-    linear-gradient(115deg, transparent 18%, rgba(255, 255, 255, 0.28) 46%, transparent 62%);
-  filter: blur(0.2px);
-  opacity: 0.86;
+    radial-gradient(ellipse at 24% 18%, rgba(255, 255, 255, 0.78), transparent 15%),
+    radial-gradient(ellipse at 72% 74%, rgba(45, 212, 191, 0.22), transparent 34%),
+    linear-gradient(125deg, transparent 12%, rgba(255, 255, 255, 0.26) 36%, transparent 58%);
+  filter: blur(0.4px);
+  opacity: 0.82;
 }
 
 .intro-glass-shape::after {
@@ -342,7 +342,17 @@ code,
 }
 
 .intro-title::after {
-  content: none;
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background:
+    radial-gradient(circle at var(--lens-1-x, -20%) var(--lens-1-y, -20%), rgba(255, 255, 255, var(--lens-1-w, 0)) 0 4%, rgba(45, 212, 191, var(--lens-1-c, 0)) 7%, transparent 15%),
+    radial-gradient(circle at var(--lens-2-x, -20%) var(--lens-2-y, -20%), rgba(255, 255, 255, var(--lens-2-w, 0)) 0 4%, rgba(244, 114, 182, var(--lens-2-c, 0)) 8%, transparent 16%),
+    radial-gradient(circle at var(--lens-3-x, -20%) var(--lens-3-y, -20%), rgba(255, 255, 255, var(--lens-3-w, 0)) 0 4%, rgba(14, 165, 233, var(--lens-3-c, 0)) 8%, transparent 15%);
+  content: "";
+  mix-blend-mode: screen;
+  opacity: 0.78;
+  pointer-events: none;
 }
 
 .intro-text-canvas {

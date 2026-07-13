@@ -465,6 +465,41 @@ function setupIntroBubbles() {
         `translate3d(${bubble.x.toFixed(1)}px, ${bubble.y.toFixed(1)}px, 0) ` +
         `scale(var(--bubble-squash-x, 1), var(--bubble-squash-y, 1))`;
     }
+    updateTitleLens();
+  };
+
+  const updateTitleLens = () => {
+    if (!introTitle) return;
+
+    const titleRect = introTitle.getBoundingClientRect();
+    const influences = bubbles
+      .map((bubble) => {
+        const rect = bubble.element.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const titleX = ((centerX - titleRect.left) / titleRect.width) * 100;
+        const titleY = ((centerY - titleRect.top) / titleRect.height) * 100;
+        const clampedX = clamp(titleX, 0, 100);
+        const clampedY = clamp(titleY, 0, 100);
+        const dx = titleX - clampedX;
+        const dy = titleY - clampedY;
+        const distance = Math.hypot(dx, dy);
+        const strength = clamp(1 - distance / 22, 0, 1) * clamp(rect.width / 240, 0.35, 1);
+        return { x: clampedX, y: clampedY, strength };
+      })
+      .sort((a, b) => b.strength - a.strength)
+      .slice(0, 3);
+
+    for (let index = 0; index < 3; index += 1) {
+      const lens = influences[index] || { x: -20, y: -20, strength: 0 };
+      const slot = index + 1;
+      const whiteAlpha = lens.strength * 0.42;
+      const colorAlpha = lens.strength * 0.32;
+      introTitle.style.setProperty(`--lens-${slot}-x`, `${lens.x.toFixed(1)}%`);
+      introTitle.style.setProperty(`--lens-${slot}-y`, `${lens.y.toFixed(1)}%`);
+      introTitle.style.setProperty(`--lens-${slot}-w`, whiteAlpha.toFixed(3));
+      introTitle.style.setProperty(`--lens-${slot}-c`, colorAlpha.toFixed(3));
+    }
   };
 
   const bounce = (bubble, axis) => {
@@ -511,43 +546,48 @@ function setupIntroBubbles() {
       }
     }
 
-    for (let i = 0; i < bubbles.length; i += 1) {
-      for (let j = i + 1; j < bubbles.length; j += 1) {
-        const a = bubbles[i];
-        const b = bubbles[j];
-        const ax = a.x + a.width / 2;
-        const ay = a.y + a.height / 2;
-        const bx = b.x + b.width / 2;
-        const by = b.y + b.height / 2;
-        const dx = bx - ax;
-        const dy = by - ay;
-        const distance = Math.hypot(dx, dy) || 1;
-        const minDistance = a.radius + b.radius;
+    for (let iteration = 0; iteration < 2; iteration += 1) {
+      for (let i = 0; i < bubbles.length; i += 1) {
+        for (let j = i + 1; j < bubbles.length; j += 1) {
+          const a = bubbles[i];
+          const b = bubbles[j];
+          const ax = a.x + a.width / 2;
+          const ay = a.y + a.height / 2;
+          const bx = b.x + b.width / 2;
+          const by = b.y + b.height / 2;
+          const dx = bx - ax;
+          const dy = by - ay;
+          const distance = Math.hypot(dx, dy) || 1;
+          const minDistance = a.radius + b.radius + 12;
 
-        if (distance >= minDistance) continue;
+          if (distance >= minDistance) continue;
 
-        const nx = dx / distance;
-        const ny = dy / distance;
-        const overlap = (minDistance - distance) / 2;
-        a.x -= nx * overlap;
-        a.y -= ny * overlap;
-        b.x += nx * overlap;
-        b.y += ny * overlap;
+          const nx = dx / distance;
+          const ny = dy / distance;
+          const overlap = (minDistance - distance) / 2;
+          a.x -= nx * overlap;
+          a.y -= ny * overlap;
+          b.x += nx * overlap;
+          b.y += ny * overlap;
 
-        const tangentX = -ny;
-        const tangentY = nx;
-        const aNormal = a.vx * nx + a.vy * ny;
-        const bNormal = b.vx * nx + b.vy * ny;
-        const aTangent = a.vx * tangentX + a.vy * tangentY;
-        const bTangent = b.vx * tangentX + b.vy * tangentY;
+          if (iteration > 0) continue;
 
-        a.vx = bNormal * nx + aTangent * tangentX;
-        a.vy = bNormal * ny + aTangent * tangentY;
-        b.vx = aNormal * nx + bTangent * tangentX;
-        b.vy = aNormal * ny + bTangent * tangentY;
+          const tangentX = -ny;
+          const tangentY = nx;
+          const aNormal = a.vx * nx + a.vy * ny;
+          const bNormal = b.vx * nx + b.vy * ny;
+          const aTangent = a.vx * tangentX + a.vy * tangentY;
+          const bTangent = b.vx * tangentX + b.vy * tangentY;
+          const damping = 0.94;
 
-        bounce(a, "x");
-        bounce(b, "x");
+          a.vx = (bNormal * nx + aTangent * tangentX) * damping;
+          a.vy = (bNormal * ny + aTangent * tangentY) * damping;
+          b.vx = (aNormal * nx + bTangent * tangentX) * damping;
+          b.vy = (aNormal * ny + bTangent * tangentY) * damping;
+
+          bounce(a, Math.abs(nx) > Math.abs(ny) ? "x" : "y");
+          bounce(b, Math.abs(nx) > Math.abs(ny) ? "x" : "y");
+        }
       }
     }
 
