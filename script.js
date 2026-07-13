@@ -291,23 +291,11 @@ function drawIntroText(canvas, lines, time, pointer) {
   ctx.drawImage(shine, 0, 0, width, height);
   ctx.restore();
 
-  const layout = getIntroTextLayout(width, height, lines);
   ctx.save();
-  ctx.font = layout.font;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.globalAlpha = 0.3;
-  ctx.strokeStyle = "rgba(15,42,67,0.16)";
-  ctx.lineWidth = Math.max(1, width * 0.0012);
-  lines.forEach((line, index) => {
-    ctx.strokeText(line, width * 0.5, layout.yPositions[index], layout.maxWidth);
-  });
-  ctx.globalAlpha = 0.46;
-  ctx.strokeStyle = "rgba(255,255,255,0.72)";
-  ctx.lineWidth = Math.max(1, width * 0.001);
-  lines.forEach((line, index) => {
-    ctx.strokeText(line, width * 0.5, layout.yPositions[index] - 1, layout.maxWidth);
-  });
+  ctx.globalCompositeOperation = "screen";
+  ctx.globalAlpha = 0.18;
+  ctx.filter = "blur(2px)";
+  ctx.drawImage(mask, 0, -1, width, height);
   ctx.restore();
 }
 
