@@ -25,6 +25,7 @@ let cvRequestResetTimer;
 let cvRequestSubmitFallbackTimer;
 let projectCountAnimationStarted = false;
 let introFluid = null;
+let pendingProjectCount = null;
 
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const canAnimate = !prefersReducedMotion && typeof window.anime === "function";
@@ -130,6 +131,7 @@ function closeIntroGate() {
   document.body.classList.remove("intro-active");
   introGate.classList.add("is-hidden");
   introFluid?.stop();
+  startProjectCountWhenVisible();
 }
 
 function fitCanvas(canvas, rect) {
@@ -518,6 +520,16 @@ function setProjectCount(value) {
   }
 
   projectCount.textContent = "0";
+  pendingProjectCount = value;
+  if (introGate && !introGate.classList.contains("is-hidden")) return;
+  startProjectCountWhenVisible();
+}
+
+function startProjectCountWhenVisible() {
+  if (!projectCount || pendingProjectCount === null || projectCountAnimationStarted) return;
+
+  const value = pendingProjectCount;
+  pendingProjectCount = null;
   const countTrigger = projectCount.closest(".metric-card") || projectCount;
   const observer = new IntersectionObserver(
     (entries) => {
