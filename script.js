@@ -167,7 +167,17 @@ function getIntroTextLayout(width, height, lines) {
   };
 }
 
-function drawIntroTextMask(ctx, width, height, lines, time) {
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function getIntroLineReveal(progress, index, lineCount) {
+  const stagger = lineCount > 1 ? 0.42 : 0;
+  const available = 1 - stagger * (lineCount - 1);
+  return clamp((progress - stagger * index) / available, 0, 1);
+}
+
+function drawIntroTextMask(ctx, width, height, lines, time, revealProgress = 1) {
   const layout = getIntroTextLayout(width, height, lines);
   ctx.clearRect(0, 0, width, height);
   ctx.save();
@@ -177,12 +187,20 @@ function drawIntroTextMask(ctx, width, height, lines, time) {
   ctx.fillStyle = "#fff";
   lines.forEach((line, index) => {
     const wave = Math.sin(time * 0.0012 + index * 1.7) * 2.2;
+    const lineWidth = Math.min(ctx.measureText(line).width, layout.maxWidth);
+    const lineReveal = getIntroLineReveal(revealProgress, index, lines.length);
+    const left = width * 0.5 - lineWidth * 0.5;
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(left - 10, 0, lineWidth * lineReveal + 20, height);
+    ctx.clip();
     ctx.fillText(line, width * 0.5, layout.yPositions[index] + wave, layout.maxWidth);
+    ctx.restore();
   });
   ctx.restore();
 }
 
-function drawIntroTextDepth(ctx, width, height, lines, time) {
+function drawIntroTextDepth(ctx, width, height, lines, time, revealProgress = 1) {
   const layout = getIntroTextLayout(width, height, lines);
   ctx.save();
   ctx.font = layout.font;
@@ -194,12 +212,20 @@ function drawIntroTextDepth(ctx, width, height, lines, time) {
   ctx.fillStyle = "rgba(15, 42, 67, 0.13)";
   lines.forEach((line, index) => {
     const wave = Math.sin(time * 0.0012 + index * 1.7) * 2.2;
+    const lineWidth = Math.min(ctx.measureText(line).width, layout.maxWidth);
+    const lineReveal = getIntroLineReveal(revealProgress, index, lines.length);
+    const left = width * 0.5 - lineWidth * 0.5;
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(left - 12, 0, lineWidth * lineReveal + 24, height);
+    ctx.clip();
     ctx.fillText(line, width * 0.5, layout.yPositions[index] + wave, layout.maxWidth);
+    ctx.restore();
   });
   ctx.restore();
 }
 
-function drawIntroText(canvas, lines, time, pointer) {
+function drawIntroText(canvas, lines, time, pointer, revealProgress = 1) {
   const rect = canvas.getBoundingClientRect();
   const { ctx, width, height, dpr } = fitCanvas(canvas, rect);
   const mask = drawIntroText.mask || (drawIntroText.mask = document.createElement("canvas"));
@@ -222,10 +248,10 @@ function drawIntroText(canvas, lines, time, pointer) {
   paintCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
   shineCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  drawIntroTextMask(maskCtx, width, height, lines, time);
+  drawIntroTextMask(maskCtx, width, height, lines, time, revealProgress);
 
   ctx.clearRect(0, 0, width, height);
-  drawIntroTextDepth(ctx, width, height, lines, time);
+  drawIntroTextDepth(ctx, width, height, lines, time, revealProgress);
 
   ctx.save();
   ctx.globalAlpha = 0.24;
@@ -345,13 +371,14 @@ function setupIntroFluid() {
   if (!introGate || !introInkCanvas || !introTextCanvas || !introTitle) return null;
 
   const pointer = { x: 0, y: 0 };
+  const reveal = { progress: canAnimate ? 0 : 1 };
   let lines = (introTitle.dataset.lines || "Fatih Berker Akyildiz|Project Portfolio").split("|");
   let raf = 0;
   let running = true;
 
   const draw = (time = 0) => {
     drawIntroInk(introInkCanvas, time, pointer);
-    drawIntroText(introTextCanvas, lines, time, pointer);
+    drawIntroText(introTextCanvas, lines, time, pointer, reveal.progress);
     if (!running || prefersReducedMotion) return;
     raf = window.requestAnimationFrame(draw);
   };
@@ -376,10 +403,29 @@ function setupIntroFluid() {
   return {
     setLines(nextLines) {
       lines = nextLines;
+      reveal.progress = canAnimate ? 0 : 1;
       draw(performance.now());
+    },
+    playReveal(duration = 1500) {
+      if (!canAnimate) {
+        reveal.progress = 1;
+        draw(performance.now());
+        return;
+      }
+
+      window.anime.remove(reveal);
+      reveal.progress = 0;
+      window.anime({
+        targets: reveal,
+        progress: [0, 1],
+        duration,
+        easing: "easeInOutCubic",
+        update: () => draw(performance.now()),
+      });
     },
     stop() {
       running = false;
+      window.anime?.remove(reveal);
       if (raf) window.cancelAnimationFrame(raf);
       introGate.removeEventListener("pointermove", handlePointer);
       window.removeEventListener("resize", handleResize);
@@ -392,6 +438,7 @@ function setupIntroGate() {
   if (!introGate || !introTitle || !introEnter) return;
   document.body.classList.add("intro-active");
   introFluid = setupIntroFluid();
+  introFluid?.playReveal(1750);
 
   if (canAnimate) {
     window.anime.set([".intro-kicker", ".intro-title", ".intro-enter", ".intro-ink-canvas"], {
@@ -416,6 +463,7 @@ function setupIntroGate() {
     const titleCopy = introTitle.querySelector(".intro-title-copy");
     if (titleCopy) titleCopy.textContent = "Welcome";
     introFluid?.setLines(["Welcome"]);
+    introFluid?.playReveal(850);
     window.scrollTo({ top: 0, behavior: "auto" });
 
     if (!canAnimate) {
