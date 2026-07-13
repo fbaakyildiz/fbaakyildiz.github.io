@@ -15,6 +15,9 @@ const cvRequestPanel = document.querySelector("#cvRequestPanel");
 const cvRequestEmail = document.querySelector("#cvRequestEmail");
 const cvRequestFrame = document.querySelector("#cvRequestFrame");
 const cvRequestSubmit = cvRequestPanel?.querySelector("button[type='submit']");
+const hero = document.querySelector(".hero");
+const heroPanel = document.querySelector(".hero-panel");
+const heroScene = document.querySelector(".hero-scene");
 let cvRequestSubmitted = false;
 let cvRequestResetTimer;
 let cvRequestSubmitFallbackTimer;
@@ -117,6 +120,87 @@ function setupActiveNav() {
   observer.observe(projectsSection);
 }
 
+function setupHeroParallax() {
+  if (!finePointer || prefersReducedMotion || !hero || !heroScene) return;
+
+  let frame = 0;
+  let pointerX = 0;
+  let pointerY = 0;
+
+  const update = () => {
+    frame = 0;
+    const rect = hero.getBoundingClientRect();
+    const x = (pointerX - rect.left) / rect.width - 0.5;
+    const y = (pointerY - rect.top) / rect.height - 0.5;
+    heroScene.style.transform = `translate3d(${x * 18}px, ${y * 12}px, 0) rotateX(${-y * 2.4}deg) rotateY(${x * 2.8}deg)`;
+    if (heroPanel) {
+      heroPanel.style.transform = `translate3d(${-x * 10}px, ${-y * 8}px, 0) rotateX(${y * 1.4}deg) rotateY(${-x * 2}deg)`;
+    }
+  };
+
+  hero.addEventListener(
+    "pointermove",
+    (event) => {
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+      if (frame) return;
+      frame = window.requestAnimationFrame(update);
+    },
+    { passive: true }
+  );
+
+  hero.addEventListener("pointerleave", () => {
+    if (frame) {
+      window.cancelAnimationFrame(frame);
+      frame = 0;
+    }
+    window.anime?.({
+      targets: [heroScene, heroPanel].filter(Boolean),
+      translateX: 0,
+      translateY: 0,
+      rotateX: 0,
+      rotateY: 0,
+      duration: 650,
+      easing: "easeOutCubic",
+    });
+  });
+}
+
+function setupHeroObjectMotion() {
+  if (!canAnimate) return;
+
+  window.anime({
+    targets: ".glass-object",
+    translateY: (element, index) => [0, index % 2 === 0 ? -18 : 16],
+    translateX: (element, index) => [0, index === 1 ? 10 : -8],
+    duration: (element, index) => 5200 + index * 850,
+    delay: window.anime.stagger(180),
+    direction: "alternate",
+    loop: true,
+    easing: "easeInOutSine",
+  });
+
+  window.anime({
+    targets: ".scene-glow",
+    scale: [1, 1.08],
+    opacity: [0.62, 0.9],
+    duration: 6400,
+    delay: window.anime.stagger(420),
+    direction: "alternate",
+    loop: true,
+    easing: "easeInOutSine",
+  });
+
+  window.anime({
+    targets: ".terrain",
+    translateX: (element, index) => [0, index === 0 ? 16 : -16],
+    duration: 9000,
+    direction: "alternate",
+    loop: true,
+    easing: "easeInOutSine",
+  });
+}
+
 function renderProjectSkeletons(count = 6) {
   if (!grid) return;
   grid.innerHTML = Array.from({ length: count }, () => '<article class="project-skeleton" aria-hidden="true"></article>').join("");
@@ -126,9 +210,20 @@ setupHeaderScrollState();
 setupProjectCardSpotlight();
 setupProjectCardNavigation();
 setupActiveNav();
+setupHeroParallax();
 
 function runIntroAnimation() {
   if (!canAnimate) return;
+
+  const releaseIntroState = () => {
+    document
+      .querySelectorAll(
+        ".site-header, .hero-copy .eyebrow, .hero-copy h1, .hero-text, .hero-actions, .scroll-cue, .hero-panel, .glass-object, .scene-glow, .terrain"
+      )
+      .forEach((element) => {
+        element.style.opacity = "";
+      });
+  };
 
   const introTargets = [
     ".site-header",
@@ -136,29 +231,55 @@ function runIntroAnimation() {
     ".hero-copy h1",
     ".hero-text",
     ".hero-actions",
+    ".scroll-cue",
     ".hero-panel",
   ];
 
   window.anime.set(introTargets, {
-    opacity: 0,
     translateY: 22,
+  });
+
+  window.anime.set([".glass-object", ".scene-glow", ".terrain"], {
+    opacity: 0,
   });
 
   window.anime
     .timeline({
       easing: "easeOutCubic",
       duration: 720,
+      complete: setupHeroObjectMotion,
     })
     .add({
       targets: ".site-header",
-      opacity: [0, 1],
+      opacity: [0.82, 1],
       translateY: [-12, 0],
       duration: 560,
     })
     .add(
       {
-        targets: [".hero-copy .eyebrow", ".hero-copy h1", ".hero-text", ".hero-actions"],
+        targets: [".scene-glow", ".terrain"],
         opacity: [0, 1],
+        scale: [1.04, 1],
+        duration: 820,
+        delay: window.anime.stagger(70),
+      },
+      "-=360"
+    )
+    .add(
+      {
+        targets: ".glass-object",
+        opacity: [0, 1],
+        translateY: [34, 0],
+        scale: [0.84, 1],
+        delay: window.anime.stagger(110),
+        duration: 920,
+      },
+      "-=720"
+    )
+    .add(
+      {
+        targets: [".hero-copy .eyebrow", ".hero-copy h1", ".hero-text", ".hero-actions"],
+        opacity: [0.76, 1],
         translateY: [22, 0],
         delay: window.anime.stagger(85),
       },
@@ -167,12 +288,23 @@ function runIntroAnimation() {
     .add(
       {
         targets: ".hero-panel",
-        opacity: [0, 1],
+        opacity: [0.78, 1],
         translateY: [26, 0],
         scale: [0.985, 1],
       },
       "-=520"
+    )
+    .add(
+      {
+        targets: ".scroll-cue",
+        opacity: [0.72, 1],
+        translateY: [12, 0],
+        duration: 420,
+      },
+      "-=360"
     );
+
+  window.setTimeout(releaseIntroState, 1800);
 }
 
 function setProjectCount(value) {
