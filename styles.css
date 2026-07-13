@@ -227,31 +227,59 @@ code,
 }
 
 .intro-title {
-  display: grid;
-  gap: 8px;
-  max-width: 1000px;
+  display: block;
+  width: min(1040px, 100%);
   margin: 0;
-  color: rgba(255, 255, 255, 0.34);
-  font-size: clamp(46px, 9vw, 118px);
-  font-weight: 800;
-  letter-spacing: -0.075em;
-  line-height: 0.9;
-  text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.9),
-    0 18px 48px rgba(190, 24, 93, 0.14),
-    0 0 1px rgba(88, 28, 135, 0.42);
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.78);
+  filter: drop-shadow(0 24px 44px rgba(190, 24, 93, 0.14));
+  font-size: 0;
+  line-height: 0;
 }
 
-@supports (-webkit-background-clip: text) {
-  .intro-title {
-    background:
-      linear-gradient(115deg, rgba(255, 255, 255, 0.96), rgba(255, 228, 230, 0.24) 34%, rgba(255, 255, 255, 0.78) 56%, rgba(251, 207, 232, 0.36)),
-      linear-gradient(180deg, rgba(16, 42, 67, 0.58), rgba(255, 255, 255, 0.18));
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+.intro-script {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.intro-script text {
+  font-family: "Great Vibes", "Snell Roundhand", "Brush Script MT", cursive;
+  font-size: 150px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  dominant-baseline: middle;
+}
+
+.intro-script-fill {
+  filter: url("#introGlassFilter");
+  fill: url("#introGlassFill");
+  opacity: 0.74;
+  paint-order: stroke fill;
+  stroke: rgba(255, 255, 255, 0.56);
+  stroke-width: 7px;
+}
+
+.intro-script-draw {
+  fill: none;
+  opacity: 0.96;
+  stroke: rgba(255, 255, 255, 0.92);
+  stroke-dasharray: 1400;
+  stroke-dashoffset: 1400;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 4.8px;
+}
+
+.intro-script-shine {
+  fill: none;
+  opacity: 0.76;
+  stroke: rgba(231, 247, 255, 0.78);
+  stroke-dasharray: 220 1180;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.4px;
+  mix-blend-mode: screen;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -273,6 +301,18 @@ code,
 
   .intro-glass-shape-b {
     animation: introShapeFloatB 12s ease-in-out infinite;
+  }
+
+  .intro-script-draw {
+    animation: introStrokeWrite 2.4s ease-out 0.2s forwards;
+  }
+
+  .intro-script-fill {
+    animation: introGlassSettle 1.2s ease-out 1.1s both;
+  }
+
+  .intro-script-shine {
+    animation: introGlassShine 3.2s ease-in-out 1.4s infinite;
   }
 }
 
@@ -316,13 +356,47 @@ code,
   }
 }
 
-.intro-title span {
-  display: block;
+@keyframes introStrokeWrite {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes introGlassSettle {
+  0% {
+    opacity: 0.24;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 0.74;
+    transform: translateY(0);
+  }
+}
+
+@keyframes introGlassShine {
+  0% {
+    stroke-dashoffset: 420;
+    opacity: 0;
+  }
+  18%,
+  46% {
+    opacity: 0.74;
+  }
+  72%,
+  100% {
+    stroke-dashoffset: -980;
+    opacity: 0;
+  }
+}
+
+.anime-ready .intro-script-draw,
+.anime-ready .intro-script-fill,
+.anime-ready .intro-script-shine {
+  animation: none;
 }
 
 .intro-gate.is-welcome .intro-title {
-  display: block;
-  letter-spacing: -0.08em;
+  width: min(720px, 100%);
 }
 
 .intro-enter {
@@ -1415,10 +1489,11 @@ h2 {
   }
 
   .intro-title {
-    gap: 10px;
-    font-size: clamp(44px, 15vw, 66px);
-    letter-spacing: -0.068em;
-    line-height: 0.94;
+    width: min(420px, 100%);
+  }
+
+  .intro-gate.is-welcome .intro-title {
+    width: min(330px, 100%);
   }
 
   .intro-kicker {

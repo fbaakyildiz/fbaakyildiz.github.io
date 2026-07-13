@@ -27,6 +27,8 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 const canAnimate = !prefersReducedMotion && typeof window.anime === "function";
 const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
+if (canAnimate) document.documentElement.classList.add("anime-ready");
+
 const year = document.querySelector("#year");
 if (year) year.textContent = new Date().getFullYear();
 
@@ -126,46 +128,137 @@ function closeIntroGate() {
   introGate.classList.add("is-hidden");
 }
 
+function renderIntroScript(lines, viewBoxHeight = 420) {
+  const yPositions = lines.length === 1 ? [viewBoxHeight * 0.52] : [168, 322];
+  const fillText = lines
+    .map((line, index) => `<text class="intro-script-fill" x="600" y="${yPositions[index]}" text-anchor="middle">${line}</text>`)
+    .join("");
+  const drawText = lines
+    .map((line, index) => `<text class="intro-script-draw" x="600" y="${yPositions[index]}" text-anchor="middle">${line}</text>`)
+    .join("");
+  const shineText = lines
+    .map((line, index) => `<text class="intro-script-shine" x="600" y="${yPositions[index]}" text-anchor="middle">${line}</text>`)
+    .join("");
+
+  return `
+    <svg class="intro-script" viewBox="0 0 1200 ${viewBoxHeight}" role="img" aria-hidden="true">
+      <defs>
+        <linearGradient id="introGlassFill" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.92)" />
+          <stop offset="34%" stop-color="rgba(255,255,255,0.18)" />
+          <stop offset="58%" stop-color="rgba(255,255,255,0.86)" />
+          <stop offset="100%" stop-color="rgba(196,224,235,0.34)" />
+        </linearGradient>
+        <filter id="introGlassFilter" x="-12%" y="-34%" width="124%" height="170%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" result="soft" />
+          <feOffset in="soft" dx="0" dy="8" result="shadow" />
+          <feColorMatrix
+            in="shadow"
+            type="matrix"
+            values="0 0 0 0 0.20 0 0 0 0 0.22 0 0 0 0 0.26 0 0 0 0.18 0"
+            result="glassShadow"
+          />
+          <feMerge>
+            <feMergeNode in="glassShadow" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      ${fillText}
+      ${drawText}
+      ${shineText}
+    </svg>
+  `;
+}
+
+function animateIntroScript() {
+  if (!canAnimate) return;
+
+  window.anime.remove(".intro-script-draw, .intro-script-fill, .intro-script-shine");
+  window.anime.set(".intro-script-draw", {
+    strokeDashoffset: 1400,
+  });
+  window.anime.set(".intro-script-fill", {
+    opacity: 0.2,
+  });
+  window.anime.set(".intro-script-shine", {
+    opacity: 0,
+    strokeDashoffset: 420,
+  });
+
+  window.anime
+    .timeline({
+      easing: "easeOutCubic",
+    })
+    .add({
+      targets: ".intro-script-draw",
+      strokeDashoffset: [1400, 0],
+      delay: window.anime.stagger(180),
+      duration: 1800,
+    })
+    .add(
+      {
+        targets: ".intro-script-fill",
+        opacity: [0.2, 0.74],
+        duration: 680,
+      },
+      "-=980"
+    )
+    .add(
+      {
+        targets: ".intro-script-shine",
+        opacity: [0, 0.76, 0],
+        strokeDashoffset: [420, -980],
+        duration: 1600,
+      },
+      "-=420"
+    );
+}
+
 function setupIntroGate() {
   if (!introGate || !introTitle || !introEnter) return;
   document.body.classList.add("intro-active");
 
   if (canAnimate) {
-    window.anime.set([".intro-kicker", ".intro-title span", ".intro-enter"], {
+    window.anime.set([".intro-kicker", ".intro-title", ".intro-enter"], {
       opacity: 0,
       translateY: 18,
     });
     window.anime({
-      targets: [".intro-kicker", ".intro-title span", ".intro-enter"],
+      targets: [".intro-kicker", ".intro-title", ".intro-enter"],
       opacity: [0, 1],
       translateY: [18, 0],
       delay: window.anime.stagger(90),
       duration: 760,
       easing: "easeOutCubic",
     });
+    animateIntroScript();
   }
 
   introEnter.addEventListener("click", () => {
     introEnter.disabled = true;
     introGate.classList.add("is-welcome");
-    introTitle.innerHTML = "<span>Welcome</span>";
+    introTitle.setAttribute("aria-label", "Welcome");
+    introTitle.innerHTML = renderIntroScript(["Welcome"], 260);
     window.scrollTo({ top: 0, behavior: "auto" });
 
     if (!canAnimate) {
-      window.setTimeout(closeIntroGate, 520);
+      window.setTimeout(closeIntroGate, 900);
       return;
     }
+
+    animateIntroScript();
 
     window.anime
       .timeline({
         easing: "easeOutCubic",
       })
       .add({
-        targets: ".intro-title span",
-        opacity: [0, 1],
+        targets: ".intro-title",
+        opacity: [0.86, 1],
         translateY: [18, 0],
         scale: [0.94, 1],
-        duration: 520,
+        duration: 620,
       })
       .add(
         {
@@ -180,9 +273,9 @@ function setupIntroGate() {
         targets: ".intro-gate",
         opacity: [1, 0],
         scale: [1, 1.018],
-        duration: 560,
+        duration: 420,
         complete: closeIntroGate,
-      });
+      }, "+=100");
   });
 }
 

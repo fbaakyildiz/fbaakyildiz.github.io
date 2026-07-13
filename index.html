@@ -16,10 +16,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=intro-gate-1" />
+    <link rel="stylesheet" href="styles.css?v=intro-glass-script-1" />
   </head>
   <body>
     <section class="intro-gate" id="introGate" aria-label="Portfolio introduction">
@@ -31,9 +31,37 @@
       </div>
       <div class="intro-content">
         <p class="intro-kicker">Project Portfolio</p>
-        <h1 class="intro-title" id="introTitle">
-          <span>Fatih Berker Akyildiz</span>
-          <span>Project Portfolio</span>
+        <h1 class="intro-title" id="introTitle" aria-label="Fatih Berker Akyildiz Project Portfolio">
+          <svg class="intro-script" viewBox="0 0 1200 420" role="img" aria-hidden="true">
+            <defs>
+              <linearGradient id="introGlassFill" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.92)" />
+                <stop offset="34%" stop-color="rgba(255,255,255,0.18)" />
+                <stop offset="58%" stop-color="rgba(255,255,255,0.86)" />
+                <stop offset="100%" stop-color="rgba(196,224,235,0.34)" />
+              </linearGradient>
+              <filter id="introGlassFilter" x="-12%" y="-34%" width="124%" height="170%">
+                <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" result="soft" />
+                <feOffset in="soft" dx="0" dy="8" result="shadow" />
+                <feColorMatrix
+                  in="shadow"
+                  type="matrix"
+                  values="0 0 0 0 0.20 0 0 0 0 0.22 0 0 0 0 0.26 0 0 0 0.18 0"
+                  result="glassShadow"
+                />
+                <feMerge>
+                  <feMergeNode in="glassShadow" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+            <text class="intro-script-fill" x="600" y="168" text-anchor="middle">Fatih Berker Akyildiz</text>
+            <text class="intro-script-fill" x="600" y="322" text-anchor="middle">Project Portfolio</text>
+            <text class="intro-script-draw" x="600" y="168" text-anchor="middle">Fatih Berker Akyildiz</text>
+            <text class="intro-script-draw" x="600" y="322" text-anchor="middle">Project Portfolio</text>
+            <text class="intro-script-shine" x="600" y="168" text-anchor="middle">Fatih Berker Akyildiz</text>
+            <text class="intro-script-shine" x="600" y="322" text-anchor="middle">Project Portfolio</text>
+          </svg>
         </h1>
         <button class="intro-enter" type="button" id="introEnter">Go to portfolio</button>
       </div>
@@ -198,6 +226,6 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script src="script.js?v=intro-gate-1"></script>
+    <script src="script.js?v=intro-glass-script-1"></script>
   </body>
 </html>
