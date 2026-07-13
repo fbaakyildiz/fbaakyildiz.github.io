@@ -150,6 +150,15 @@ function renderIntroScript(lines, viewBoxHeight = 420) {
           <stop offset="100%" stop-color="rgba(214,239,246,0.42)" />
         </linearGradient>
         <filter id="introGlassFilter" x="-12%" y="-34%" width="124%" height="170%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.018 0.032" numOctaves="2" seed="7" result="noise" />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="2.8"
+            xChannelSelector="R"
+            yChannelSelector="G"
+            result="ripple"
+          />
           <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" result="soft" />
           <feOffset in="soft" dx="0" dy="5" result="shadow" />
           <feColorMatrix
@@ -158,9 +167,21 @@ function renderIntroScript(lines, viewBoxHeight = 420) {
             values="0 0 0 0 0.20 0 0 0 0 0.22 0 0 0 0 0.26 0 0 0 0.18 0"
             result="glassShadow"
           />
+          <feSpecularLighting
+            in="soft"
+            surfaceScale="9"
+            specularConstant="0.72"
+            specularExponent="30"
+            lighting-color="#ffffff"
+            result="specular"
+          >
+            <fePointLight x="-320" y="-220" z="280" />
+          </feSpecularLighting>
+          <feComposite in="specular" in2="SourceAlpha" operator="in" result="specularCut" />
           <feMerge>
             <feMergeNode in="glassShadow" />
-            <feMergeNode in="SourceGraphic" />
+            <feMergeNode in="ripple" />
+            <feMergeNode in="specularCut" />
           </feMerge>
         </filter>
       </defs>
