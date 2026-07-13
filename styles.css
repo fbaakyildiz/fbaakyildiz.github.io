@@ -195,34 +195,68 @@ code,
 }
 
 .intro-glass-shape {
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  border-radius: 999px;
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.42), rgba(236, 254, 255, 0.12) 42%, rgba(255, 228, 240, 0.16)),
-    rgba(255, 255, 255, 0.08);
+    radial-gradient(circle at 30% 24%, rgba(255, 255, 255, 0.86), transparent 12%),
+    radial-gradient(circle at 68% 72%, rgba(45, 212, 191, 0.2), transparent 34%),
+    radial-gradient(circle at 34% 76%, rgba(244, 114, 182, 0.18), transparent 32%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.34), rgba(236, 254, 255, 0.1) 46%, rgba(255, 228, 240, 0.14)),
+    rgba(255, 255, 255, 0.06);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.78),
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    inset 18px -24px 38px rgba(14, 165, 233, 0.08),
+    inset -18px 20px 34px rgba(244, 114, 182, 0.08),
     0 24px 60px rgba(15, 23, 42, 0.08),
     0 0 54px rgba(45, 212, 191, 0.12);
-  opacity: 0.62;
-  backdrop-filter: blur(14px) saturate(1.24);
+  opacity: 0.72;
+  backdrop-filter: blur(13px) saturate(1.26);
+}
+
+.intro-glass-shape::before,
+.intro-glass-shape::after {
+  position: absolute;
+  inset: 12%;
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
+}
+
+.intro-glass-shape::before {
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background:
+    radial-gradient(ellipse at 30% 24%, rgba(255, 255, 255, 0.34), transparent 18%),
+    linear-gradient(115deg, transparent 18%, rgba(255, 255, 255, 0.18) 46%, transparent 62%);
+  filter: blur(0.2px);
+  opacity: 0.74;
+}
+
+.intro-glass-shape::after {
+  inset: 28% -18%;
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent),
+    radial-gradient(ellipse at 50% 50%, rgba(14, 165, 233, 0.16), transparent 58%);
+  filter: blur(8px);
+  opacity: 0.58;
+  transform: rotate(-12deg);
 }
 
 .intro-glass-shape-a {
-  right: 5%;
-  top: 16%;
-  width: clamp(260px, 30vw, 460px);
-  height: clamp(120px, 12vw, 190px);
-  border-radius: 34% 66% 42% 58% / 58% 36% 64% 42%;
-  transform: rotate(14deg);
+  right: 6%;
+  top: 14%;
+  width: clamp(190px, 18vw, 285px);
+  height: clamp(190px, 18vw, 285px);
+  transform: translate3d(0, 0, 0) scale(1);
 }
 
 .intro-glass-shape-b {
-  left: 7%;
-  bottom: 16%;
-  width: clamp(230px, 28vw, 420px);
-  height: clamp(110px, 12vw, 180px);
-  border-radius: 66% 34% 58% 42% / 38% 62% 36% 64%;
-  transform: rotate(-18deg);
+  left: 8%;
+  bottom: 15%;
+  width: clamp(160px, 16vw, 240px);
+  height: clamp(160px, 16vw, 240px);
+  opacity: 0.64;
+  transform: translate3d(0, 0, 0) scale(1);
 }
 
 .intro-content {
@@ -306,11 +340,15 @@ code,
   }
 
   .intro-glass-shape-a {
-    animation: introShapeFloatA 14s ease-in-out infinite;
+    animation: introBubbleDriftA 18s ease-in-out infinite;
   }
 
   .intro-glass-shape-b {
-    animation: introShapeFloatB 16s ease-in-out infinite;
+    animation: introBubbleDriftB 20s ease-in-out infinite;
+  }
+
+  .intro-glass-shape::after {
+    animation: introBubbleWave 7s ease-in-out infinite;
   }
 }
 
@@ -334,23 +372,53 @@ code,
   }
 }
 
-@keyframes introShapeFloatA {
+@keyframes introBubbleDriftA {
   0%,
   100% {
-    transform: translate3d(0, 0, 0) rotate(14deg);
+    transform: translate3d(0, 0, 0) scale(1);
+    border-radius: 999px;
+    opacity: 0.68;
   }
-  50% {
-    transform: translate3d(-22px, 16px, 0) rotate(20deg);
+  28% {
+    transform: translate3d(-7vw, 5vh, 0) scale(1.08, 0.94);
+    border-radius: 48% 52% 46% 54% / 54% 44% 56% 46%;
+    opacity: 0.76;
+  }
+  62% {
+    transform: translate3d(-2vw, 12vh, 0) scale(0.94, 1.08);
+    border-radius: 54% 46% 55% 45% / 42% 58% 44% 56%;
+    opacity: 0.62;
   }
 }
 
-@keyframes introShapeFloatB {
+@keyframes introBubbleDriftB {
   0%,
   100% {
-    transform: translate3d(0, 0, 0) rotate(-18deg);
+    transform: translate3d(0, 0, 0) scale(1);
+    border-radius: 999px;
+    opacity: 0.62;
+  }
+  34% {
+    transform: translate3d(9vw, -6vh, 0) scale(0.92, 1.08);
+    border-radius: 56% 44% 50% 50% / 44% 56% 48% 52%;
+    opacity: 0.72;
+  }
+  70% {
+    transform: translate3d(14vw, 2vh, 0) scale(1.1, 0.94);
+    border-radius: 46% 54% 58% 42% / 58% 42% 54% 46%;
+    opacity: 0.56;
+  }
+}
+
+@keyframes introBubbleWave {
+  0%,
+  100% {
+    transform: translate3d(-12%, 0, 0) rotate(-12deg) scaleX(0.9);
+    opacity: 0.4;
   }
   50% {
-    transform: translate3d(18px, -14px, 0) rotate(-10deg);
+    transform: translate3d(14%, 6%, 0) rotate(8deg) scaleX(1.18);
+    opacity: 0.72;
   }
 }
 
@@ -1470,19 +1538,19 @@ h2 {
   }
 
   .intro-glass-shape-a {
-    right: -54px;
+    right: -34px;
     top: 18%;
-    width: 190px;
-    height: 128px;
-    opacity: 0.52;
+    width: 150px;
+    height: 150px;
+    opacity: 0.64;
   }
 
   .intro-glass-shape-b {
-    left: -58px;
+    left: -42px;
     bottom: 18%;
-    width: 168px;
-    height: 114px;
-    opacity: 0.48;
+    width: 132px;
+    height: 132px;
+    opacity: 0.56;
   }
 
   .intro-glow-a,
