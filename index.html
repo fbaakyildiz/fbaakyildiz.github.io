@@ -19,7 +19,7 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=intro-liquid-filter-1" />
+    <link rel="stylesheet" href="styles.css?v=intro-liquid-filter-2" />
   </head>
   <body>
     <section class="intro-gate" id="introGate" aria-label="Portfolio introduction">
@@ -35,17 +35,17 @@
           <svg class="intro-script" viewBox="0 0 1200 420" role="img" aria-hidden="true">
             <defs>
               <linearGradient id="introGlassFill" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="rgba(255,255,255,0.98)" />
-                <stop offset="28%" stop-color="rgba(255,255,255,0.46)" />
-                <stop offset="54%" stop-color="rgba(255,255,255,0.9)" />
-                <stop offset="100%" stop-color="rgba(214,239,246,0.42)" />
+                <stop offset="0%" stop-color="rgba(255,255,255,0.58)" />
+                <stop offset="28%" stop-color="rgba(255,255,255,0.08)" />
+                <stop offset="55%" stop-color="rgba(232,247,255,0.34)" />
+                <stop offset="100%" stop-color="rgba(120,160,180,0.16)" />
               </linearGradient>
               <filter id="introGlassFilter" x="-12%" y="-34%" width="124%" height="170%">
                 <feTurbulence type="fractalNoise" baseFrequency="0.018 0.032" numOctaves="2" seed="7" result="noise" />
                 <feDisplacementMap
                   in="SourceGraphic"
                   in2="noise"
-                  scale="2.8"
+                  scale="1.5"
                   xChannelSelector="R"
                   yChannelSelector="G"
                   result="ripple"
@@ -60,9 +60,9 @@
                 />
                 <feSpecularLighting
                   in="soft"
-                  surfaceScale="9"
-                  specularConstant="0.72"
-                  specularExponent="30"
+                  surfaceScale="4"
+                  specularConstant="0.28"
+                  specularExponent="18"
                   lighting-color="#ffffff"
                   result="specular"
                 >
@@ -247,6 +247,6 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script src="script.js?v=intro-liquid-filter-1"></script>
+    <script src="script.js?v=intro-liquid-filter-2"></script>
   </body>
 </html>
