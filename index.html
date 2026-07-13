@@ -19,9 +19,26 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=cinematic-hero-1" />
+    <link rel="stylesheet" href="styles.css?v=intro-gate-1" />
   </head>
   <body>
+    <section class="intro-gate" id="introGate" aria-label="Portfolio introduction">
+      <div class="intro-atmosphere" aria-hidden="true">
+        <span class="intro-glow intro-glow-a"></span>
+        <span class="intro-glow intro-glow-b"></span>
+        <span class="intro-glass-shape intro-glass-shape-a"></span>
+        <span class="intro-glass-shape intro-glass-shape-b"></span>
+      </div>
+      <div class="intro-content">
+        <p class="intro-kicker">Project Portfolio</p>
+        <h1 class="intro-title" id="introTitle">
+          <span>Fatih Berker Akyildiz</span>
+          <span>Project Portfolio</span>
+        </h1>
+        <button class="intro-enter" type="button" id="introEnter">Go to portfolio</button>
+      </div>
+    </section>
+
     <header class="site-header">
       <nav class="nav-shell" aria-label="Primary navigation">
         <a class="brand" href="#top" aria-label="Home">
@@ -102,15 +119,6 @@
 
     <main id="top">
       <section class="hero">
-        <div class="hero-scene" aria-hidden="true">
-          <span class="scene-glow scene-glow-blue"></span>
-          <span class="scene-glow scene-glow-teal"></span>
-          <span class="glass-object object-prism"></span>
-          <span class="glass-object object-orb"></span>
-          <span class="glass-object object-ring"></span>
-          <span class="terrain terrain-left"></span>
-          <span class="terrain terrain-right"></span>
-        </div>
         <div class="hero-copy">
           <p class="eyebrow">Industrial engineering · analytics · GenAI</p>
           <h1>Projects in analytics, simulation, and decision support.</h1>
@@ -124,10 +132,6 @@
               <img src="assets/githublogo.png" alt="GitHub" />
             </a>
           </div>
-          <a class="scroll-cue" href="#projects" aria-label="Scroll to projects">
-            <span>Explore work</span>
-            <i aria-hidden="true"></i>
-          </a>
         </div>
         <aside class="hero-panel" aria-label="Portfolio summary">
           <div class="profile-card">
@@ -194,6 +198,6 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script src="script.js?v=cinematic-hero-2"></script>
+    <script src="script.js?v=intro-gate-1"></script>
   </body>
 </html>
