@@ -242,6 +242,46 @@ function getIntroRevealFocus(ctx, width, height, lines, revealProgress) {
   return focus;
 }
 
+function fillMovingIntroBand(ctx, width, height, centerX, colors) {
+  const bandWidth = width * 0.72;
+  const gradient = ctx.createLinearGradient(centerX - bandWidth, 0, centerX + bandWidth, 0);
+  gradient.addColorStop(0, "rgba(255,255,255,0)");
+  gradient.addColorStop(0.32, colors.edge);
+  gradient.addColorStop(0.5, colors.core);
+  gradient.addColorStop(0.68, colors.edge);
+  gradient.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(centerX - bandWidth, 0, bandWidth * 2, height);
+}
+
+function drawFlowingIntroGradient(ctx, width, height, time) {
+  const baseGradient = ctx.createLinearGradient(0, 0, width, height);
+  baseGradient.addColorStop(0, "rgba(224,251,252,0.72)");
+  baseGradient.addColorStop(0.24, "rgba(186,230,253,0.64)");
+  baseGradient.addColorStop(0.5, "rgba(255,255,255,0.9)");
+  baseGradient.addColorStop(0.76, "rgba(251,207,232,0.68)");
+  baseGradient.addColorStop(1, "rgba(255,241,242,0.76)");
+  ctx.fillStyle = baseGradient;
+  ctx.fillRect(0, 0, width, height);
+
+  const period = width * 2.1;
+  const blueX = ((time * 0.145) % period) - width * 0.55;
+  const pinkX = width * 1.55 - ((time * 0.125) % period);
+  const blue = {
+    core: "rgba(14,165,233,0.88)",
+    edge: "rgba(45,212,191,0.5)",
+  };
+  const pink = {
+    core: "rgba(236,72,153,0.78)",
+    edge: "rgba(251,113,133,0.46)",
+  };
+
+  [-period, 0, period].forEach((offset) => {
+    fillMovingIntroBand(ctx, width, height, blueX + offset, blue);
+    fillMovingIntroBand(ctx, width, height, pinkX + offset, pink);
+  });
+}
+
 function drawIntroTextMask(ctx, width, height, lines, time, revealProgress = 1) {
   const layout = getIntroTextLayout(width, height, lines);
   ctx.clearRect(0, 0, width, height);
@@ -304,14 +344,7 @@ function drawIntroText(canvas, lines, time, pointer, revealProgress = 1) {
   ctx.restore();
 
   paintCtx.clearRect(0, 0, width, height);
-  const baseGradient = paintCtx.createLinearGradient(0, 0, width, height);
-  baseGradient.addColorStop(0, "rgba(236,254,255,0.9)");
-  baseGradient.addColorStop(0.18, "rgba(94,234,212,0.98)");
-  baseGradient.addColorStop(0.46, "rgba(14,165,233,0.98)");
-  baseGradient.addColorStop(0.72, "rgba(236,72,153,0.88)");
-  baseGradient.addColorStop(1, "rgba(255,255,255,0.88)");
-  paintCtx.fillStyle = baseGradient;
-  paintCtx.fillRect(0, 0, width, height);
+  drawFlowingIntroGradient(paintCtx, width, height, time);
   paintCtx.globalCompositeOperation = "screen";
 
   const colors = [
@@ -430,11 +463,18 @@ function setupIntroFluid() {
   let lines = (introTitle.dataset.lines || "Fatih Berker Akyildiz|Project Portfolio").split("|");
   let running = true;
   let lastDrawTime = performance.now();
+  let frame = 0;
 
   const draw = (time = 0) => {
     if (!running) return;
     lastDrawTime = time;
     drawIntroText(introTextCanvas, lines, time, pointer, reveal.progress);
+  };
+
+  const tick = (time = performance.now()) => {
+    if (!running) return;
+    draw(time);
+    frame = window.requestAnimationFrame(tick);
   };
 
   const handlePointer = (event) => {
@@ -453,6 +493,7 @@ function setupIntroFluid() {
     document.fonts.ready.then(() => draw(performance.now()));
   }
   draw(performance.now());
+  if (canAnimate) frame = window.requestAnimationFrame(tick);
 
   return {
     setLines(nextLines) {
@@ -483,6 +524,7 @@ function setupIntroFluid() {
     },
     stop() {
       running = false;
+      if (frame) window.cancelAnimationFrame(frame);
       window.anime?.remove(reveal);
       introGate.removeEventListener("pointermove", handlePointer);
       window.removeEventListener("resize", handleResize);
