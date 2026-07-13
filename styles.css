@@ -259,6 +259,33 @@ code,
   transform: translate3d(0, 0, 0) scale(1);
 }
 
+.intro-glass-shape-c {
+  left: 18%;
+  top: 12%;
+  width: clamp(92px, 9vw, 150px);
+  height: clamp(92px, 9vw, 150px);
+  opacity: 0.54;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.intro-glass-shape-d {
+  right: 20%;
+  bottom: 16%;
+  width: clamp(110px, 11vw, 170px);
+  height: clamp(110px, 11vw, 170px);
+  opacity: 0.5;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.intro-glass-shape-e {
+  left: 47%;
+  top: 68%;
+  width: clamp(72px, 7vw, 120px);
+  height: clamp(72px, 7vw, 120px);
+  opacity: 0.44;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
 .intro-content {
   position: relative;
   z-index: 2;
@@ -340,15 +367,27 @@ code,
   }
 
   .intro-glass-shape-a {
-    animation: introBubbleDriftA 18s ease-in-out infinite;
+    animation: introBubbleDriftA 9s ease-in-out infinite;
   }
 
   .intro-glass-shape-b {
-    animation: introBubbleDriftB 20s ease-in-out infinite;
+    animation: introBubbleDriftB 10s ease-in-out -2s infinite;
+  }
+
+  .intro-glass-shape-c {
+    animation: introBubbleDriftC 8s ease-in-out -1s infinite;
+  }
+
+  .intro-glass-shape-d {
+    animation: introBubbleDriftD 11s ease-in-out -4s infinite;
+  }
+
+  .intro-glass-shape-e {
+    animation: introBubbleDriftE 7s ease-in-out -3s infinite;
   }
 
   .intro-glass-shape::after {
-    animation: introBubbleWave 7s ease-in-out infinite;
+    animation: introBubbleWave 4.8s ease-in-out infinite;
   }
 }
 
@@ -380,12 +419,12 @@ code,
     opacity: 0.68;
   }
   28% {
-    transform: translate3d(-7vw, 5vh, 0) scale(1.08, 0.94);
+    transform: translate3d(-7vw, 5vh, 0) scale(1.12, 0.88);
     border-radius: 48% 52% 46% 54% / 54% 44% 56% 46%;
     opacity: 0.76;
   }
   62% {
-    transform: translate3d(-2vw, 12vh, 0) scale(0.94, 1.08);
+    transform: translate3d(-2vw, 13vh, 0) scale(0.9, 1.13);
     border-radius: 54% 46% 55% 45% / 42% 58% 44% 56%;
     opacity: 0.62;
   }
@@ -399,14 +438,62 @@ code,
     opacity: 0.62;
   }
   34% {
-    transform: translate3d(9vw, -6vh, 0) scale(0.92, 1.08);
+    transform: translate3d(9vw, -7vh, 0) scale(0.88, 1.12);
     border-radius: 56% 44% 50% 50% / 44% 56% 48% 52%;
     opacity: 0.72;
   }
   70% {
-    transform: translate3d(14vw, 2vh, 0) scale(1.1, 0.94);
+    transform: translate3d(15vw, 2vh, 0) scale(1.14, 0.88);
     border-radius: 46% 54% 58% 42% / 58% 42% 54% 46%;
     opacity: 0.56;
+  }
+}
+
+@keyframes introBubbleDriftC {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.48;
+  }
+  32% {
+    transform: translate3d(18vw, 11vh, 0) scale(1.16, 0.86);
+    opacity: 0.62;
+  }
+  64% {
+    transform: translate3d(8vw, 22vh, 0) scale(0.88, 1.14);
+    opacity: 0.46;
+  }
+}
+
+@keyframes introBubbleDriftD {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.5;
+  }
+  30% {
+    transform: translate3d(-12vw, -12vh, 0) scale(0.9, 1.12);
+    opacity: 0.64;
+  }
+  68% {
+    transform: translate3d(-22vw, -3vh, 0) scale(1.15, 0.88);
+    opacity: 0.42;
+  }
+}
+
+@keyframes introBubbleDriftE {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.4;
+  }
+  38% {
+    transform: translate3d(-18vw, -18vh, 0) scale(0.88, 1.13);
+    opacity: 0.56;
+  }
+  72% {
+    transform: translate3d(16vw, -30vh, 0) scale(1.14, 0.9);
+    opacity: 0.36;
   }
 }
 
@@ -1551,6 +1638,30 @@ h2 {
     width: 132px;
     height: 132px;
     opacity: 0.56;
+  }
+
+  .intro-glass-shape-c {
+    left: 14%;
+    top: 18%;
+    width: 76px;
+    height: 76px;
+    opacity: 0.38;
+  }
+
+  .intro-glass-shape-d {
+    right: 12%;
+    bottom: 30%;
+    width: 86px;
+    height: 86px;
+    opacity: 0.34;
+  }
+
+  .intro-glass-shape-e {
+    left: 52%;
+    top: 72%;
+    width: 58px;
+    height: 58px;
+    opacity: 0.3;
   }
 
   .intro-glow-a,
