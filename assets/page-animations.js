@@ -6,7 +6,10 @@
   injectSharedMotionStyles();
   setupHeaderScrollState();
 
-  if (!canAnimate) return;
+  if (!canAnimate) {
+    document.documentElement.classList.remove("project-motion-pending");
+    return;
+  }
 
   const findTargets = (selectors) =>
     selectors.flatMap((selector) => Array.from(document.querySelectorAll(selector)));
@@ -88,6 +91,7 @@
     opacity: 0,
     translateY: 24,
   });
+  document.documentElement.classList.remove("project-motion-pending");
 
   const revealObserver = new IntersectionObserver(
     (entries, observer) => {
