@@ -36,7 +36,11 @@ const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matc
 const compactIntroViewport = window.matchMedia("(max-width: 640px)");
 const introTextMetricsCache = new Map();
 
-if (canAnimate) document.documentElement.classList.add("anime-ready");
+if (canAnimate) {
+  document.documentElement.classList.add("anime-ready", "intro-pending");
+} else {
+  document.documentElement.classList.remove("intro-pending");
+}
 
 const year = document.querySelector("#year");
 if (year) year.textContent = new Date().getFullYear();
@@ -905,6 +909,7 @@ function runIntroAnimation() {
     opacity: 0,
     translateY: 22,
   });
+  document.documentElement.classList.remove("intro-pending");
 
   window.anime
     .timeline({

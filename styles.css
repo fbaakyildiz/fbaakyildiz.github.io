@@ -80,6 +80,17 @@ body::after {
   mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.22) 78%, transparent 100%);
 }
 
+.anime-ready.intro-pending .site-header,
+.anime-ready.intro-pending .hero-copy .eyebrow,
+.anime-ready.intro-pending .hero-copy h1,
+.anime-ready.intro-pending .hero-text,
+.anime-ready.intro-pending .hero-actions,
+.anime-ready.intro-pending .hero-panel,
+.anime-ready.intro-pending .project-card {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0) scale(0.985);
+}
+
 body.intro-active {
   overflow: hidden;
 }
