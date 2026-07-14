@@ -657,7 +657,7 @@ function setupIntroBubbles() {
 
       return {
         element,
-        radius: compact ? size * 0.44 : size / 2,
+        radius: compact ? size * 0.5 : size / 2,
         height: rect.height,
         width: rect.width,
         x,
@@ -739,7 +739,7 @@ function setupIntroBubbles() {
           const dx = bx - ax;
           const dy = by - ay;
           const distance = Math.hypot(dx, dy) || 1;
-          const minDistance = compact ? Math.max(18, a.radius + b.radius - 10) : a.radius + b.radius + 12;
+          const minDistance = compact ? a.radius + b.radius + 4 : a.radius + b.radius + 12;
 
           if (distance >= minDistance) continue;
 

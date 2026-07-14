@@ -107,8 +107,10 @@ code,
   background:
     radial-gradient(circle at 18% 24%, rgba(255, 182, 193, 0.62), transparent 31%),
     radial-gradient(circle at 82% 18%, rgba(251, 207, 232, 0.58), transparent 32%),
+    radial-gradient(circle at 72% 76%, rgba(14, 165, 233, 0.26), transparent 34%),
+    radial-gradient(circle at 28% 66%, rgba(45, 212, 191, 0.22), transparent 38%),
     radial-gradient(circle at 52% 88%, rgba(254, 215, 170, 0.48), transparent 35%),
-    linear-gradient(135deg, #fff7ed 0%, #ffe4f0 32%, #fff1f2 56%, #e0f2fe 100%);
+    linear-gradient(135deg, #fff7ed 0%, #ffe4f0 30%, #fff1f2 54%, #cfebff 100%);
   color: var(--ink);
   transition: opacity 420ms ease, visibility 420ms ease;
 }
@@ -154,9 +156,10 @@ code,
   inset: -18%;
   z-index: 0;
   background:
-    radial-gradient(ellipse at 12% 30%, rgba(45, 212, 191, 0.22), transparent 30%),
+    radial-gradient(ellipse at 12% 30%, rgba(45, 212, 191, 0.26), transparent 30%),
     radial-gradient(ellipse at 38% 18%, rgba(255, 255, 255, 0.66), transparent 26%),
-    radial-gradient(ellipse at 72% 34%, rgba(14, 165, 233, 0.2), transparent 28%),
+    radial-gradient(ellipse at 72% 34%, rgba(14, 165, 233, 0.26), transparent 28%),
+    radial-gradient(ellipse at 76% 72%, rgba(56, 189, 248, 0.22), transparent 34%),
     radial-gradient(ellipse at 60% 76%, rgba(244, 114, 182, 0.26), transparent 32%),
     radial-gradient(ellipse at 26% 82%, rgba(251, 146, 60, 0.18), transparent 28%);
   content: "";
@@ -184,8 +187,8 @@ code,
   top: 17%;
   width: clamp(280px, 42vw, 620px);
   height: clamp(220px, 34vw, 500px);
-  background: radial-gradient(ellipse, rgba(45, 212, 191, 0.28), rgba(14, 165, 233, 0.14) 48%, transparent 70%);
-  opacity: 0.8;
+  background: radial-gradient(ellipse, rgba(45, 212, 191, 0.32), rgba(14, 165, 233, 0.18) 48%, transparent 70%);
+  opacity: 0.84;
 }
 
 .intro-glow-b {
@@ -1586,8 +1589,10 @@ h2 {
     background:
       radial-gradient(circle at 20% 20%, rgba(255, 182, 193, 0.54), transparent 34%),
       radial-gradient(circle at 78% 22%, rgba(251, 207, 232, 0.5), transparent 36%),
+      radial-gradient(circle at 74% 72%, rgba(14, 165, 233, 0.25), transparent 36%),
+      radial-gradient(circle at 22% 64%, rgba(45, 212, 191, 0.2), transparent 38%),
       radial-gradient(circle at 52% 86%, rgba(254, 215, 170, 0.38), transparent 38%),
-      linear-gradient(145deg, #fff7ed 0%, #ffe4f0 44%, #eef7ff 100%);
+      linear-gradient(145deg, #fff7ed 0%, #ffe4f0 42%, #dcebff 100%);
   }
 
   .intro-atmosphere::after {
