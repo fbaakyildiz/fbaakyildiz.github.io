@@ -265,8 +265,8 @@ function drawFlowingIntroGradient(ctx, width, height, time) {
   ctx.fillRect(0, 0, width, height);
 
   const period = width * 1.65;
-  const blueX = ((time * 0.26) % period) - width * 0.32;
-  const pinkX = width * 1.32 - ((time * 0.22) % period);
+  const blueX = ((time * 0.13) % period) - width * 0.32;
+  const pinkX = width * 1.32 - ((time * 0.11) % period);
   const blue = {
     core: "rgba(0,174,255,0.98)",
     edge: "rgba(45,212,191,0.68)",
@@ -287,7 +287,7 @@ function drawIntroGlassHighlights(ctx, width, height, time, pointer) {
   ctx.globalCompositeOperation = "screen";
 
   const sweepPeriod = width * 1.4;
-  const sweepX = ((time * 0.18) % sweepPeriod) - width * 0.2 + pointer.x * 20;
+  const sweepX = ((time * 0.09) % sweepPeriod) - width * 0.2 + pointer.x * 20;
   const sweep = ctx.createLinearGradient(sweepX - width * 0.18, 0, sweepX + width * 0.18, height);
   sweep.addColorStop(0, "rgba(255,255,255,0)");
   sweep.addColorStop(0.42, "rgba(255,255,255,0.08)");
