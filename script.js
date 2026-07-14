@@ -27,6 +27,8 @@ let projectCountAnimationStarted = false;
 let introFluid = null;
 let introBubbles = null;
 let pendingProjectCount = null;
+let mainIntroAnimationStarted = false;
+let pendingProjectCardsAnimation = false;
 
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const canAnimate = !prefersReducedMotion && typeof window.anime === "function";
@@ -135,6 +137,11 @@ function closeIntroGate() {
   introGate.classList.add("is-hidden");
   introFluid?.stop();
   introBubbles?.stop();
+  runIntroAnimation();
+  if (pendingProjectCardsAnimation || grid?.querySelector(".project-card")) {
+    pendingProjectCardsAnimation = false;
+    animateProjectCards();
+  }
   startProjectCountWhenVisible();
 }
 
@@ -882,7 +889,8 @@ setupActiveNav();
 setupIntroGate();
 
 function runIntroAnimation() {
-  if (!canAnimate) return;
+  if (!canAnimate || mainIntroAnimationStarted) return;
+  mainIntroAnimationStarted = true;
 
   const introTargets = [
     ".site-header",
@@ -980,8 +988,13 @@ function animateProjectCount(value) {
 
 function animateProjectCards() {
   if (!canAnimate) return;
+  if (introGate && !introGate.classList.contains("is-hidden")) {
+    pendingProjectCardsAnimation = true;
+    return;
+  }
 
   const cards = grid.querySelectorAll(".project-card");
+  if (!cards.length) return;
   window.anime.remove(cards);
   window.anime.set(cards, {
     opacity: 0,
@@ -999,7 +1012,7 @@ function animateProjectCards() {
   });
 }
 
-runIntroAnimation();
+if (!introGate) runIntroAnimation();
 renderProjectSkeletons();
 
 function closeCvRequestPanel() {
