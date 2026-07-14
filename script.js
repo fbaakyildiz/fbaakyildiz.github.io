@@ -31,6 +31,7 @@ let pendingProjectCount = null;
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const canAnimate = !prefersReducedMotion && typeof window.anime === "function";
 const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+const compactIntroViewport = window.matchMedia("(max-width: 640px)");
 
 if (canAnimate) document.documentElement.classList.add("anime-ready");
 
@@ -173,6 +174,10 @@ function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
 }
 
+function isCompactIntro() {
+  return compactIntroViewport.matches;
+}
+
 function getIntroLineReveal(progress, index, lineCount) {
   const stagger = lineCount > 1 ? 0.42 : 0;
   const available = 1 - stagger * (lineCount - 1);
@@ -282,7 +287,7 @@ function drawFlowingIntroGradient(ctx, width, height, time) {
   });
 }
 
-function drawIntroGlassHighlights(ctx, width, height, time, pointer) {
+function drawIntroGlassHighlights(ctx, width, height, time, pointer, compact = false) {
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
@@ -297,7 +302,8 @@ function drawIntroGlassHighlights(ctx, width, height, time, pointer) {
   ctx.fillStyle = sweep;
   ctx.fillRect(sweepX - width * 0.2, 0, width * 0.4, height);
 
-  for (let i = 0; i < 4; i += 1) {
+  const highlightCount = compact ? 2 : 4;
+  for (let i = 0; i < highlightCount; i += 1) {
     const phase = time * (0.0007 + i * 0.00008) + i * 1.8;
     const x = width * (0.18 + i * 0.22 + Math.sin(phase) * 0.08) + pointer.x * 16;
     const y = height * (0.22 + (i % 2) * 0.42 + Math.cos(phase * 1.4) * 0.08) + pointer.y * 12;
@@ -393,6 +399,7 @@ function drawIntroText(canvas, lines, time, pointer, revealProgress = 1) {
   paintCtx.clearRect(0, 0, width, height);
   drawFlowingIntroGradient(paintCtx, width, height, time);
   paintCtx.globalCompositeOperation = "screen";
+  const compact = isCompactIntro();
 
   const colors = [
     "rgba(45,212,191,0.38)",
@@ -402,7 +409,8 @@ function drawIntroText(canvas, lines, time, pointer, revealProgress = 1) {
     "rgba(56,189,248,0.3)",
   ];
 
-  for (let i = 0; i < 9; i += 1) {
+  const blobCount = compact ? 3 : 9;
+  for (let i = 0; i < blobCount; i += 1) {
     const phase = time * (0.00018 + i * 0.000006) + i * 1.37;
     const px = width * (0.5 + Math.sin(phase) * 0.46) + pointer.x * 24;
     const py = height * (0.5 + Math.cos(phase * 1.18) * 0.38) + pointer.y * 18;
@@ -417,7 +425,7 @@ function drawIntroText(canvas, lines, time, pointer, revealProgress = 1) {
     paintCtx.fill();
   }
 
-  drawIntroGlassHighlights(paintCtx, width, height, time, pointer);
+  drawIntroGlassHighlights(paintCtx, width, height, time, pointer, compact);
 
   paintCtx.globalCompositeOperation = "destination-in";
   paintCtx.drawImage(mask, 0, 0, width, height);
@@ -512,6 +520,7 @@ function setupIntroFluid() {
   let lines = (introTitle.dataset.lines || "Fatih Berker Akyildiz|Project Portfolio").split("|");
   let running = true;
   let lastDrawTime = performance.now();
+  let lastTickDrawTime = 0;
   let frame = 0;
 
   const draw = (time = 0) => {
@@ -522,7 +531,11 @@ function setupIntroFluid() {
 
   const tick = (time = performance.now()) => {
     if (!running) return;
-    draw(time);
+    const minFrameMs = isCompactIntro() ? 50 : 0;
+    if (!minFrameMs || time - lastTickDrawTime >= minFrameMs) {
+      draw(time);
+      lastTickDrawTime = time;
+    }
     frame = window.requestAnimationFrame(tick);
   };
 
@@ -564,8 +577,18 @@ function setupIntroFluid() {
         progress: [0, 1],
         duration,
         easing: "easeInOutCubic",
-        update: () => draw(performance.now()),
-        complete: () => draw(performance.now()),
+        update: () => {
+          const now = performance.now();
+          if (!isCompactIntro() || now - lastTickDrawTime >= 50) {
+            draw(now);
+            lastTickDrawTime = now;
+          }
+        },
+        complete: () => {
+          const now = performance.now();
+          draw(now);
+          lastTickDrawTime = now;
+        },
       });
     },
     redraw() {
@@ -585,6 +608,7 @@ function setupIntroFluid() {
 function setupIntroBubbles() {
   if (!introGate || prefersReducedMotion) return null;
 
+  const compact = isCompactIntro();
   const elements = [...introGate.querySelectorAll(".intro-glass-shape")];
   if (!elements.length) return null;
 
@@ -598,7 +622,7 @@ function setupIntroBubbles() {
     bubbles = elements.map((element, index) => {
       const rect = element.getBoundingClientRect();
       const size = Math.min(rect.width, rect.height);
-      const speedBase = bounds.width < 640 ? 54 : 86;
+      const speedBase = compact ? 28 : 86;
       const angle = ((index * 73 + 28) * Math.PI) / 180;
       const x = clamp(rect.left - bounds.left, 8, Math.max(8, bounds.width - rect.width - 8));
       const y = clamp(rect.top - bounds.top, 8, Math.max(8, bounds.height - rect.height - 8));
@@ -675,7 +699,8 @@ function setupIntroBubbles() {
       }
     }
 
-    for (let iteration = 0; iteration < 2; iteration += 1) {
+    const collisionIterations = compact ? 0 : 2;
+    for (let iteration = 0; iteration < collisionIterations; iteration += 1) {
       for (let i = 0; i < bubbles.length; i += 1) {
         for (let j = i + 1; j < bubbles.length; j += 1) {
           const a = bubbles[i];
