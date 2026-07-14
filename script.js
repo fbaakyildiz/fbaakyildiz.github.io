@@ -334,14 +334,27 @@ function drawIntroTextDepth(ctx, width, height, lines, time, revealProgress = 1)
   const layout = getIntroTextLayout(width, height, lines);
   ctx.save();
   ctx.font = layout.font;
-  ctx.shadowColor = "rgba(15, 42, 67, 0.2)";
-  ctx.shadowBlur = 28;
-  ctx.shadowOffsetY = 16;
-  ctx.fillStyle = "rgba(15, 42, 67, 0.13)";
+  ctx.shadowColor = "rgba(15, 42, 67, 0.28)";
+  ctx.shadowBlur = 34;
+  ctx.shadowOffsetY = 18;
+  ctx.fillStyle = "rgba(15, 42, 67, 0.18)";
   lines.forEach((line, index) => {
     const wave = Math.sin(time * 0.0012 + index * 1.7) * 2.2;
     const lineReveal = getIntroLineReveal(revealProgress, index, lines.length);
     drawIntroRevealedLine(ctx, line, width * 0.5, layout.yPositions[index] + wave, layout.maxWidth, lineReveal);
+  });
+  ctx.restore();
+
+  ctx.save();
+  ctx.font = layout.font;
+  ctx.globalCompositeOperation = "screen";
+  ctx.shadowColor = "rgba(255, 255, 255, 0.42)";
+  ctx.shadowBlur = 10;
+  ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
+  lines.forEach((line, index) => {
+    const wave = Math.sin(time * 0.0012 + index * 1.7) * 2.2;
+    const lineReveal = getIntroLineReveal(revealProgress, index, lines.length);
+    drawIntroRevealedLine(ctx, line, width * 0.5, layout.yPositions[index] + wave - 1.5, layout.maxWidth, lineReveal);
   });
   ctx.restore();
 }
@@ -372,8 +385,8 @@ function drawIntroText(canvas, lines, time, pointer, revealProgress = 1) {
   drawIntroTextDepth(ctx, width, height, lines, time, revealProgress);
 
   ctx.save();
-  ctx.globalAlpha = 0.24;
-  ctx.filter = "blur(16px)";
+  ctx.globalAlpha = 0.3;
+  ctx.filter = "blur(18px)";
   ctx.drawImage(mask, 0, 0, width, height);
   ctx.restore();
 
