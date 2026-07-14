@@ -32,6 +32,7 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 const canAnimate = !prefersReducedMotion && typeof window.anime === "function";
 const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 const compactIntroViewport = window.matchMedia("(max-width: 640px)");
+const introTextMetricsCache = new Map();
 
 if (canAnimate) document.documentElement.classList.add("anime-ready");
 
@@ -178,6 +179,26 @@ function isCompactIntro() {
   return compactIntroViewport.matches;
 }
 
+function getIntroFrameInterval() {
+  return isCompactIntro() ? 50 : 33;
+}
+
+function getIntroLineMetrics(ctx, line, maxWidth) {
+  const cacheKey = `${ctx.font}|${line}|${Math.round(maxWidth)}`;
+  const cached = introTextMetricsCache.get(cacheKey);
+  if (cached) return cached;
+
+  if (introTextMetricsCache.size > 80) introTextMetricsCache.clear();
+
+  const chars = Array.from(line);
+  const widths = chars.map((char) => ctx.measureText(char).width);
+  const textWidth = Math.max(widths.reduce((sum, width) => sum + width, 0), 1);
+  const scale = Math.min(1, maxWidth / textWidth);
+  const metrics = { chars, scale, textWidth, widths };
+  introTextMetricsCache.set(cacheKey, metrics);
+  return metrics;
+}
+
 function getIntroLineReveal(progress, index, lineCount) {
   const stagger = lineCount > 1 ? 0.42 : 0;
   const available = 1 - stagger * (lineCount - 1);
@@ -189,9 +210,7 @@ function easeIntroLetter(value) {
 }
 
 function drawIntroRevealedLine(ctx, line, x, y, maxWidth, revealProgress) {
-  const chars = Array.from(line);
-  const textWidth = Math.max(ctx.measureText(line).width, 1);
-  const scale = Math.min(1, maxWidth / textWidth);
+  const { chars, scale, textWidth, widths } = getIntroLineMetrics(ctx, line, maxWidth);
   const visibleUnits = revealProgress * chars.length;
   const fullChars = Math.floor(visibleUnits);
   const partial = easeIntroLetter(visibleUnits - fullChars);
@@ -204,7 +223,7 @@ function drawIntroRevealedLine(ctx, line, x, y, maxWidth, revealProgress) {
 
   let cursor = 0;
   chars.forEach((char, index) => {
-    const charWidth = ctx.measureText(char).width;
+    const charWidth = widths[index];
     if (index < fullChars) {
       ctx.fillText(char, cursor, 0);
     } else if (index === fullChars && partial > 0) {
@@ -232,8 +251,7 @@ function getIntroRevealFocus(ctx, width, height, lines, revealProgress) {
     const lineReveal = getIntroLineReveal(revealProgress, index, lines.length);
     if (lineReveal <= 0 || (focus.active && lineReveal >= 1)) return;
 
-    const textWidth = Math.max(ctx.measureText(line).width, 1);
-    const scale = Math.min(1, layout.maxWidth / textWidth);
+    const { scale, textWidth } = getIntroLineMetrics(ctx, line, layout.maxWidth);
     const visibleWidth = textWidth * scale * clamp(lineReveal, 0, 1);
     const left = width * 0.5 - (textWidth * scale) / 2;
     focus = {
@@ -531,8 +549,8 @@ function setupIntroFluid() {
 
   const tick = (time = performance.now()) => {
     if (!running) return;
-    const minFrameMs = isCompactIntro() ? 50 : 0;
-    if (!minFrameMs || time - lastTickDrawTime >= minFrameMs) {
+    const minFrameMs = getIntroFrameInterval();
+    if (time - lastTickDrawTime >= minFrameMs) {
       draw(time);
       lastTickDrawTime = time;
     }
@@ -579,7 +597,7 @@ function setupIntroFluid() {
         easing: "easeInOutCubic",
         update: () => {
           const now = performance.now();
-          if (!isCompactIntro() || now - lastTickDrawTime >= 50) {
+          if (now - lastTickDrawTime >= getIntroFrameInterval()) {
             draw(now);
             lastTickDrawTime = now;
           }
@@ -614,6 +632,7 @@ function setupIntroBubbles() {
 
   let frame = 0;
   let lastTime = performance.now();
+  let lastBubbleDrawTime = 0;
   let running = true;
   let bubbles = [];
 
@@ -669,10 +688,16 @@ function setupIntroBubbles() {
 
   const tick = (time) => {
     if (!running) return;
+    const minFrameMs = compact ? 33 : 16;
+    if (time - lastBubbleDrawTime < minFrameMs) {
+      frame = window.requestAnimationFrame(tick);
+      return;
+    }
 
     const bounds = introGate.getBoundingClientRect();
     const dt = Math.min((time - lastTime) / 1000, 0.032);
     lastTime = time;
+    lastBubbleDrawTime = time;
 
     for (const bubble of bubbles) {
       bubble.x += bubble.vx * dt;
@@ -699,7 +724,7 @@ function setupIntroBubbles() {
       }
     }
 
-    const collisionIterations = compact ? 0 : 2;
+    const collisionIterations = compact ? 1 : 2;
     for (let iteration = 0; iteration < collisionIterations; iteration += 1) {
       for (let i = 0; i < bubbles.length; i += 1) {
         for (let j = i + 1; j < bubbles.length; j += 1) {
