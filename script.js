@@ -180,7 +180,12 @@ function isCompactIntro() {
 }
 
 function getIntroFrameInterval() {
-  return isCompactIntro() ? 50 : 33;
+  return 33;
+}
+
+function shouldSkipIntro() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("skipIntro") === "1" || window.location.hash === "#projects";
 }
 
 function getIntroLineMetrics(ctx, line, maxWidth) {
@@ -305,7 +310,7 @@ function drawFlowingIntroGradient(ctx, width, height, time) {
   });
 }
 
-function drawIntroGlassHighlights(ctx, width, height, time, pointer, compact = false) {
+function drawIntroGlassHighlights(ctx, width, height, time, pointer) {
   ctx.save();
   ctx.globalCompositeOperation = "screen";
 
@@ -320,8 +325,7 @@ function drawIntroGlassHighlights(ctx, width, height, time, pointer, compact = f
   ctx.fillStyle = sweep;
   ctx.fillRect(sweepX - width * 0.2, 0, width * 0.4, height);
 
-  const highlightCount = compact ? 2 : 4;
-  for (let i = 0; i < highlightCount; i += 1) {
+  for (let i = 0; i < 4; i += 1) {
     const phase = time * (0.0007 + i * 0.00008) + i * 1.8;
     const x = width * (0.18 + i * 0.22 + Math.sin(phase) * 0.08) + pointer.x * 16;
     const y = height * (0.22 + (i % 2) * 0.42 + Math.cos(phase * 1.4) * 0.08) + pointer.y * 12;
@@ -417,7 +421,6 @@ function drawIntroText(canvas, lines, time, pointer, revealProgress = 1) {
   paintCtx.clearRect(0, 0, width, height);
   drawFlowingIntroGradient(paintCtx, width, height, time);
   paintCtx.globalCompositeOperation = "screen";
-  const compact = isCompactIntro();
 
   const colors = [
     "rgba(45,212,191,0.38)",
@@ -427,8 +430,7 @@ function drawIntroText(canvas, lines, time, pointer, revealProgress = 1) {
     "rgba(56,189,248,0.3)",
   ];
 
-  const blobCount = compact ? 3 : 9;
-  for (let i = 0; i < blobCount; i += 1) {
+  for (let i = 0; i < 9; i += 1) {
     const phase = time * (0.00018 + i * 0.000006) + i * 1.37;
     const px = width * (0.5 + Math.sin(phase) * 0.46) + pointer.x * 24;
     const py = height * (0.5 + Math.cos(phase * 1.18) * 0.38) + pointer.y * 18;
@@ -443,7 +445,7 @@ function drawIntroText(canvas, lines, time, pointer, revealProgress = 1) {
     paintCtx.fill();
   }
 
-  drawIntroGlassHighlights(paintCtx, width, height, time, pointer, compact);
+  drawIntroGlassHighlights(paintCtx, width, height, time, pointer);
 
   paintCtx.globalCompositeOperation = "destination-in";
   paintCtx.drawImage(mask, 0, 0, width, height);
@@ -655,7 +657,7 @@ function setupIntroBubbles() {
 
       return {
         element,
-        radius: size / 2,
+        radius: compact ? size * 0.44 : size / 2,
         height: rect.height,
         width: rect.width,
         x,
@@ -737,7 +739,7 @@ function setupIntroBubbles() {
           const dx = bx - ax;
           const dy = by - ay;
           const distance = Math.hypot(dx, dy) || 1;
-          const minDistance = a.radius + b.radius + 12;
+          const minDistance = compact ? Math.max(18, a.radius + b.radius - 10) : a.radius + b.radius + 12;
 
           if (distance >= minDistance) continue;
 
@@ -797,6 +799,11 @@ function setupIntroBubbles() {
 
 function setupIntroGate() {
   if (!introGate || !introTitle || !introEnter) return;
+  if (shouldSkipIntro()) {
+    closeIntroGate();
+    return;
+  }
+
   document.body.classList.add("intro-active");
   introFluid = setupIntroFluid();
   introBubbles = setupIntroBubbles();
