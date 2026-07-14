@@ -263,8 +263,13 @@ code,
 
 .intro-glass-shape.is-bouncing-x,
 .intro-glass-shape.is-bouncing-y {
-  filter: brightness(1.1) saturate(1.16);
+  filter: brightness(1.12) saturate(1.18);
   opacity: 0.92;
+}
+
+.intro-glass-shape.is-bouncing-x::before,
+.intro-glass-shape.is-bouncing-y::before {
+  animation: introBubbleImpact 320ms cubic-bezier(0.2, 0.9, 0.25, 1);
 }
 
 .intro-glass-shape-a {
@@ -513,6 +518,25 @@ code,
   50% {
     transform: translate3d(14%, 6%, 0) rotate(8deg) scaleX(1.18);
     opacity: 0.72;
+  }
+}
+
+@keyframes introBubbleImpact {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.82;
+  }
+  34% {
+    transform: translate3d(var(--bubble-impact-x, 5%), var(--bubble-impact-y, -3%), 0) scale(1.16, 0.86);
+    opacity: 0.96;
+  }
+  62% {
+    transform: translate3d(calc(var(--bubble-impact-x, 5%) * -0.55), calc(var(--bubble-impact-y, -3%) * -0.55), 0) scale(0.92, 1.08);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.82;
   }
 }
 

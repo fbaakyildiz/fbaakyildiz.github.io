@@ -691,12 +691,14 @@ function setupIntroBubbles() {
     bubble.element.classList.remove("is-bouncing-x", "is-bouncing-y");
     bubble.element.style.setProperty("--bubble-squash-x", axis === "x" ? "0.97" : "1.03");
     bubble.element.style.setProperty("--bubble-squash-y", axis === "x" ? "1.03" : "0.97");
+    bubble.element.style.setProperty("--bubble-impact-x", axis === "x" ? "7%" : "2%");
+    bubble.element.style.setProperty("--bubble-impact-y", axis === "x" ? "-2%" : "7%");
     bubble.element.classList.add(axis === "x" ? "is-bouncing-x" : "is-bouncing-y");
     window.setTimeout(() => {
       bubble.element.style.setProperty("--bubble-squash-x", "1");
       bubble.element.style.setProperty("--bubble-squash-y", "1");
       bubble.element.classList.remove("is-bouncing-x", "is-bouncing-y");
-    }, 180);
+    }, 320);
   };
 
   const tick = (time) => {
