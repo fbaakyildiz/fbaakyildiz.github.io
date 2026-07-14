@@ -196,7 +196,8 @@ function getIntroFrameInterval() {
 
 function shouldSkipIntro() {
   const params = new URLSearchParams(window.location.search);
-  return params.get("skipIntro") === "1" || window.location.hash === "#projects";
+  const hash = window.location.hash.toLowerCase();
+  return params.has("skipIntro") || params.has("skip-intro") || hash.startsWith("#projects");
 }
 
 function getIntroLineMetrics(ctx, line, maxWidth) {

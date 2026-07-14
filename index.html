@@ -8,6 +8,15 @@
       content="Project portfolio of Fatih Berker Akyildiz: analytics, industrial engineering, GenAI, and decision-support systems."
     />
     <title>Fatih Berker Akyildiz | Project Portfolio</title>
+    <script>
+      (() => {
+        const params = new URLSearchParams(window.location.search);
+        const hash = window.location.hash.toLowerCase();
+        if (params.has("skipIntro") || params.has("skip-intro") || hash.startsWith("#projects")) {
+          document.documentElement.classList.add("intro-skip");
+        }
+      })();
+    </script>
     <link rel="shortcut icon" href="/favicon.ico?v=profile-1" />
     <link rel="icon" href="/favicon.ico?v=profile-1" sizes="any" />
     <link rel="icon" href="assets/favicon.png?v=profile-1" type="image/png" />
@@ -19,7 +28,7 @@
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=cv-button-border-1" />
+    <link rel="stylesheet" href="styles.css?v=procalys-1" />
     <noscript><style>.intro-pending .site-header,.intro-pending .hero-copy .eyebrow,.intro-pending .hero-copy h1,.intro-pending .hero-text,.intro-pending .hero-actions,.intro-pending .hero-panel,.intro-pending .project-card{opacity:1;transform:none}</style></noscript>
   </head>
   <body>
@@ -207,6 +216,6 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-    <script src="script.js?v=cv-button-border-1"></script>
+    <script src="script.js?v=procalys-1"></script>
   </body>
 </html>

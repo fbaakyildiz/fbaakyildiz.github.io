@@ -1,6 +1,6 @@
 [
   {
-    "title": "BrahmsAI",
+    "title": "ProcalysAI",
     "year": "2026",
     "category": "Clinical AI",
     "summary": "A local clinical decision-support system for PCT-guided antibiotic stewardship, using a hardened multi-agent LLM pipeline, structured validation, clinician review flags, and report-style output.",

@@ -91,6 +91,21 @@ body::after {
   transform: translate3d(0, 22px, 0) scale(0.985);
 }
 
+.intro-skip .intro-gate {
+  display: none;
+}
+
+.intro-skip.anime-ready.intro-pending .site-header,
+.intro-skip.anime-ready.intro-pending .hero-copy .eyebrow,
+.intro-skip.anime-ready.intro-pending .hero-copy h1,
+.intro-skip.anime-ready.intro-pending .hero-text,
+.intro-skip.anime-ready.intro-pending .hero-actions,
+.intro-skip.anime-ready.intro-pending .hero-panel,
+.intro-skip.anime-ready.intro-pending .project-card {
+  opacity: 1;
+  transform: none;
+}
+
 body.intro-active {
   overflow: hidden;
 }
